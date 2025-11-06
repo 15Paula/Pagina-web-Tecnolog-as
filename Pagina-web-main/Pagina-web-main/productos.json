@@ -1,0 +1,196 @@
+[
+  {
+    "nombre": "Tablero de Ajedrez",
+    "descripcion": "Tablero resistente y práctico, ideal para aprender, jugar en familia o competir. Incluye piezas completas en dos colores, de fácil manipulación y diseño elegante. Perfecto para niños, jóvenes y adultos que disfrutan la estrategia y el pensamiento lógico.",
+    "descripcionDetallada": "Disfruta de uno de los juegos de estrategia más populares del mundo con este tablero de ajedrez resistente y fácil de transportar. Incluye piezas completas, livianas y de buen tamaño para un manejo cómodo tanto de niños como de adultos. Su diseño colorido y duradero lo hace ideal para el hogar, colegios o actividades recreativas.",
+    "precio": 35000,
+    "unidades": 15,
+    "categoria": "juegos",
+    "imagen": "Imagenes/Ajedrez.jpg",
+    "imagenesExtra": [],
+    "detalles": "Medidas: Tablero de 40x40 cm, piezas entre 3 y 7 cm de altura.\nEnvío: Empaque seguro, entrega nacional en 2 a 5 días hábiles."
+  },
+  {
+    "nombre": "Caja interactiva",
+    "descripcion": "Caja didáctica con diferentes actividades en cada lado, diseñada para estimular la motricidad, la coordinación y el aprendizaje a través del juego.",
+    "descripcionDetallada": "La caja interactiva infantil es un recurso educativo y divertido que ofrece múltiples actividades en un solo juego. Cada cara incluye dinámicas como laberintos, encajes y piezas móviles que permiten a los niños desarrollar su motricidad fina, coordinación ojo-mano y habilidades cognitivas mientras se divierten.",
+    "precio": 32900,
+    "unidades": 12,
+    "categoria": "juegos",
+    "imagen": "Imagenes/Caja interactiva.jpg",
+    "imagenesExtra": [
+      "Imagenes/Caja interactiva 2.jpg",
+      "Imagenes/Caja interactiva 3.jpg"
+    ],
+    "detalles": "Medidas: 30 x 30 x 30 cm aprox.\nPeso: 2 – 3 kg.\nEnvío: Empaque seguro con protección de cartón y plástico burbuja. Tiempo estimado de entrega nacional: 3 a 6 días hábiles."
+  },
+  {
+    "nombre": "Juego Escalera",
+    "descripcion": "Juego clásico de mesa “Escalera” ideal para compartir en familia o con amigos, fomentando la diversión y el aprendizaje de manera sencilla.",
+    "descripcionDetallada": "El juego de Escalera, también conocido como Serpientes y Escaleras, es un clásico que combina suerte y emoción. Incluye un tapete ilustrado con casillas numeradas, fichas de colores y un dado grande, perfecto para que los niños aprendan a contar mientras disfrutan de una competencia sana.",
+    "precio": 38000,
+    "unidades": 6,
+    "categoria": "juegos",
+    "imagen": "Imagenes/Juego escalera.jpg",
+    "imagenesExtra": [],
+    "detalles": "Tapete: entre 1 m x 1 m y 1.2 m x 1.2 m\nFichas: 12 – 15 cm de alto aprox.\nDado: 10 x 10 cm aprox.\nEnvío: se despacha enrollado y protegido, con fichas y dado en bolsa o caja. Tiempo estimado de entrega nacional: 2 a 5 días hábiles."
+  },
+  {
+    "nombre": "Juego de Parques y Escalera",
+    "descripcion": "Juego de mesa 2 en 1 con tablero reversible: Parqués por un lado y Escalera (Serpientes y Escaleras) por el otro. Diversión asegurada para toda la familia.",
+    "descripcionDetallada": "Este juego combina dos clásicos favoritos en un solo tablero. Por un lado encontrarás el tradicional Parqués, ideal para poner a prueba la estrategia y la paciencia, y por el otro el divertido Escalera, perfecto para los más pequeños gracias a sus reglas sencillas.",
+    "precio": 40000,
+    "unidades": 4,
+    "categoria": "juegos",
+    "imagen": "Imagenes/Parques escalera.jpg",
+    "imagenesExtra": [
+      "Imagenes/Parques escalera 2.jpg"
+    ],
+    "detalles": "Tablero abierto: 35 x 35 cm aprox.\nFichas: 2,5 – 3 cm de alto.\nDados: 1,5 – 2 cm de lado.\nEnvío: se entrega en su caja ilustrada, empacado de forma segura. Tiempo estimado de entrega nacional: 2 a 5 días hábiles."
+  },
+  {
+    "nombre": "Kit figuras geométricas",
+    "descripcion": "Kit didáctico de figuras geométricas en diferentes colores y tamaños, ideal para el aprendizaje de formas y el desarrollo de habilidades matemáticas en niños.",
+    "descripcionDetallada": "El kit de figuras geométricas es un recurso educativo práctico para enseñar y reforzar conceptos de matemáticas desde temprana edad. Incluye diversas formas como triángulos, círculos, cuadrados, rectángulos y hexágonos en colores llamativos, lo que facilita la identificación y clasificación.",
+    "precio": 28900,
+    "unidades": 20,
+    "categoria": "juegos",
+    "imagen": "Imagenes/Kit de figuras geometricas.jpg",
+    "imagenesExtra": [
+      "Imagenes/Kit figuras geometricas.jpg"
+    ],
+    "detalles": "Figuras: entre 4 y 7 cm de lado/diámetro según la forma.\nEnvío: se entrega en caja/estuche plástico transparente con tapa, protegido para evitar daños. Tiempo estimado de entrega nacional: 2 a 5 días hábiles."
+  },
+  {
+    "nombre": "Juego táctil para los pies",
+    "descripcion": "Juego táctil para pies con texturas variadas que estimula la sensibilidad, la motricidad y la diversión de los niños.",
+    "descripcionDetallada": "El juego táctil para pies está diseñado para fomentar el desarrollo sensorial y la coordinación motriz en niños a través de superficies con distintas texturas. Al caminar, saltar o moverse sobre las piezas, los pequeños exploran sensaciones diferentes que fortalecen el equilibrio, la concentración y la integración sensorial.",
+    "precio": 30000,
+    "unidades": 8,
+    "categoria": "juegos",
+    "imagen": "Imagenes/Juego tactil para pies.jpg",
+    "imagenesExtra": [],
+    "detalles": "Medidas aproximadas:\n\nCaja: 28 x 28 x 9 cm aprox.\n\nCada pieza: 20 x 20 cm aprox.\n\nÁrea total armada: 80 x 40 cm (aprox., dependiendo de la disposición).\n\n\n\nEnvío \n\nEmpaque: Caja plástica rígida verde con tapa ilustrada.\n\nProtección adicional: se recomienda envoltura plástica y refuerzo en cartón.\n\nDimensiones de envío: 30 x 30 x 10 cm aprox.\n\nTiempo de entrega (Colombia, referencia): 2–5 días hábiles."
+  },
+  {
+    "nombre": "Tarjetas Bilingues",
+    "descripcion": "Tarjetas bilingües divertidas y educativas para que los niños aprendan inglés y español jugando.",
+    "descripcionDetallada": "Las tarjetas bilingües para niños son ideales para el aprendizaje temprano de dos idiomas. Incluyen imágenes coloridas y palabras en español e inglés, ayudando a relacionar conceptos de forma visual y divertida. Refuerzan vocabulario, memoria y pronunciación, en casa o en el aula. Su diseño resistente y práctico facilita su manipulación, convirtiendo el aprendizaje en un juego dinámico.",
+    "precio": 19900,
+    "unidades": 26,
+    "categoria": "juegos",
+    "imagen": "Imagenes/Tarjetas Bilingues.jpg",
+    "imagenesExtra": [],
+    "detalles": "Detalles físicos:\n\nTarjetas didácticas con ilustraciones coloridas y atractivas.\n\nMaterial: cartón plastificado resistente (fáciles de limpiar y duraderas).\n\nIdiomas: Español e Inglés (palabra con su respectiva imagen).\n\nBordes redondeados para mayor seguridad en niños pequeños.\n\nMedidas aproximadas:\n\nCada tarjeta mide 10 cm x 7 cm \n\n\nEstuche práctico tipo caja para guardarlas y transportarlas.\n\nEnvío:\n\nEntrega disponible a todo el país.\n\nEmpaque seguro para evitar daños."
+  },
+  {
+    "nombre": "Juego de la botella",
+    "descripcion": "Divertido juego de la botella para reuniones y fiestas, ideal para compartir risas y retos entre amigos.",
+    "descripcionDetallada": "El clásico juego de la botella ahora en una presentación práctica y moderna. Incluye una base giratoria resistente y una botella ligera que gira con facilidad, asegurando dinamismo en cada turno. Es perfecto para fiestas, reuniones familiares o de amigos, fomentando la interacción y la diversión.",
+    "precio": 24900,
+    "unidades": 10,
+    "categoria": "juegos",
+    "imagen": "Imagenes/Juego interactivo de fiestas.jpg",
+    "imagenesExtra": [],
+    "detalles": "Dimensiones aproximadas: base de 25 x 25 cm, botella de 20 cm de largo.\nEnvío: producto empacado de forma segura, con despacho nacional en 2 a 5 días hábiles."
+  },
+  {
+    "nombre": "Paquete de mariposas",
+    "descripcion": "Paquete de mariposas decorativas, perfectas para darle color y alegría a paredes, cuartos o eventos.",
+    "descripcionDetallada": "Son fáciles de instalar gracias a su adhesivo reutilizable, ideal para decorar paredes, muebles, cuartos infantiles, fiestas o celebraciones especiales. Su diseño ligero y tridimensional aporta un efecto realista, convirtiéndose en un detalle único para resaltar la decoración de interiores.",
+    "precio": 16000,
+    "unidades": 25,
+    "categoria": "decoracion",
+    "imagen": "Imagenes/Mariposas decoracion.jpg",
+    "imagenesExtra": [
+      "Imagenes/Mariposas decoracion 2.jpg"
+    ],
+    "detalles": "Contenido: set de 10 mariposas\nEnvío: entrega segura en sobre o caja protectora, con despacho nacional en 2 a 5 días hábiles."
+  },
+  {
+    "nombre": "Guirnaldas de cumpleaños",
+    "descripcion": "Guirnalda de cumpleaños en cartón resistente, colorida y lista para ambientar tu celebración.",
+    "descripcionDetallada": "Dale vida a tus fiestas con esta guirnalda de cumpleaños elaborada en cartón de alta calidad. Su diseño colorido y llamativo es ideal para decorar paredes, mesas o salones, creando un ambiente festivo y alegre. Es fácil de colocar gracias a su cordón de unión, además de ser reutilizable para múltiples celebraciones.",
+    "precio": 20000,
+    "unidades": 16,
+    "categoria": "decoracion",
+    "imagen": "Imagenes/Guirnalda Cumpleaños.jpg",
+    "imagenesExtra": [
+      "Imagenes/Decoraciones feliz cumpleaños rosa .jpg",
+      "Imagenes/Decoracion Feliz cumpleaños rosa.jpg"
+    ],
+    "detalles": "Material: cartón resistente con acabado brillante y cordón de sujeción.\nEnvío: se despacha en empaque plano y seguro, con entrega nacional en 2 a 5 días hábiles."
+  },
+  {
+    "nombre": "Decoración feliz cumpleaños",
+    "descripcion": "Guirnalda de pared “Feliz Cumpleaños” en cartón resistente, ideal para decorar y dar vida a tu fiesta.",
+    "descripcionDetallada": "Celebra en grande con esta guirnalda decorativa de pared que forma la frase “Feliz Cumpleaños”, elaborada en cartón de alta calidad. Su diseño colorido y llamativo es perfecto para resaltar el ambiente festivo en cumpleaños infantiles, familiares o de adultos.",
+    "precio": 20000,
+    "unidades": 7,
+    "categoria": "decoracion",
+    "imagen": "Imagenes/Decoracion Feliz cumpleaños.jpg",
+    "imagenesExtra": [
+      "Imagenes/Feliz cumpleaños dorado.jpg",
+      "Imagenes/Feliz Cumpleaños rosa.jpg",
+      "Imagenes/Toppers cumpleaños.jpg"
+    ],
+    "detalles": "Material: cartón resistente con colores brillantes.\nEnvío: se entrega en empaque plano y seguro, con despacho nacional en 2 a 5 días hábiles."
+  },
+  {
+    "nombre": "Decoración de graduación",
+    "descripcion": "Decoración de graduación con cartel “Feliz Día” y globo, ideal para resaltar un momento especial.",
+    "descripcionDetallada": "Celebra los logros académicos con esta decoración para graduación, que incluye un cartel en cartón con la frase “Feliz Día” y un globo especial para darle un toque festivo y elegante al ambiente.",
+    "precio": 21900,
+    "unidades": 17,
+    "categoria": "decoracion",
+    "imagen": "Imagenes/Decoracion graduacion.jpg",
+    "imagenesExtra": [],
+    "detalles": "Envío: producto empacado de forma segura en sobre protector, con entrega nacional en 2 a 5 días hábiles."
+  },
+  {
+    "nombre": "Guirnalda baby shower",
+    "descripcion": "Guirnalda de baby shower con camisas azul y rosa, tierna y colorida para ambientar tu celebración.",
+    "descripcionDetallada": "Decora tu fiesta con esta encantadora guirnalda de baby shower en forma de camisas azul y rosa. Elaborada en cartón resistente y unida con cordón, aporta un toque dulce y especial a la celebración, ideal para resaltar la temática del evento.",
+    "precio": 23000,
+    "unidades": 5,
+    "categoria": "decoracion",
+    "imagen": "Imagenes/Guirnalda baby shower.jpg",
+    "imagenesExtra": [],
+    "detalles": "Material: cartón troquelado en colores azul y rosa, con cordón de unión.\nEnvío: empaque plano y seguro, con despacho nacional en 2 a 5 días hábiles."
+  },
+  {
+    "nombre": "Decoración día de la madre",
+    "descripcion": "Decoración de pared “Día de la Madre” en cartón, perfecta para ambientar y celebrar esta fecha especial.",
+    "descripcionDetallada": "Haz que esta fecha sea inolvidable con una decoración de pared “Día de la Madre” elaborada en cartón resistente y de colores vivos. Su diseño elegante y festivo es ideal para realzar cualquier espacio: salas, salones, colegios o reuniones familiares.",
+    "precio": 19000,
+    "unidades": 6,
+    "categoria": "decoracion",
+    "imagen": "Imagenes/Decoracion dia de la madre.jpg",
+    "imagenesExtra": [
+      "Imagenes/Guirnalda dia de la madre.jpg"
+    ],
+    "detalles": "Material: cartón troquelado, impreso en colores vivos.\nEnvío: se entrega en empaque plano y seguro, con despacho nacional en 2 a 5 días hábiles."
+  },
+  {
+    "nombre": "Guirnalda primera comunion",
+    "descripcion": "Guirnalda decorativa de Primera Comunión, ideal para darle un toque especial y elegante a la celebración.",
+    "descripcionDetallada": "Celebra este momento tan importante con una guirnalda de Primera Comunión, elaborada en cartón resistente con detalles delicados y significativos. Su diseño elegante y festivo la hace perfecta para decorar salones, mesas de postres, entradas o paredes, resaltando la solemnidad y alegría del evento. Fácil de colocar y ligera, es un detalle que aporta calidez y estilo a la celebración religiosa.",
+    "precio": 21900,
+    "unidades": 14,
+    "categoria": "decoracion",
+    "imagen": "Imagenes/Primera comunion mujer.jpg",
+    "imagenesExtra": [],
+    "detalles": "Material: cartón troquelado con acabados decorativos.\nEnvío: se entrega en empaque plano y seguro, con despacho nacional en 2 a 5 días hábiles."
+  },
+  {
+    "nombre": "Laberinto de cuentas",
+    "descripcion": "Laberinto de cuentas colorido, ideal para estimular la motricidad y coordinación en los niños.",
+    "descripcionDetallada": "El laberinto de cuentas es un clásico juguete educativo que ayuda a desarrollar la coordinación ojo-mano, la concentración y las habilidades motoras finas en los niños. Sus cuentas de colores se deslizan a través de caminos metálicos con diferentes formas, ofreciendo horas de entretenimiento y aprendizaje. Es seguro, resistente y perfecto tanto para uso en casa como en entornos educativos, promoviendo la creatividad y el pensamiento lógico en los pequeños.",
+    "precio": 32900,
+    "unidades": 9,
+    "categoria": "juegos",
+    "imagen": "Imagenes/Laberinto de cuentas.jpg",
+    "imagenesExtra": [],
+    "detalles": "Material: base en madera resistente, alambres metálicos y cuentas de colores en plástico/madera.\nEnvío: se despacha en caja protectora, con entrega nacional en 2 a 5 días hábiles."
+  }
+]

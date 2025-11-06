@@ -1,0 +1,1595 @@
+/* ──────────────── RESET ──────────────── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background: #f5f5f5;
+  color: #222;
+  line-height: 1.4;
+}
+
+/* ──────────────── HEADER & NAV ──────────────── */
+header {
+  background: #D45510;
+  color: white;
+  padding: 1.2rem 2rem;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo img {
+  max-height: 50px;
+}
+
+.menu {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex: 1;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.menu a:hover {
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+
+.user-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* perfil icon (reemplaza imagen) */
+.perfil-container {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: white;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.perfil-container:hover {
+  transform: translateY(-2px);
+  opacity: 0.85;
+}
+
+.perfil-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.perfil-text {
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* ──────────────── 🛒 CARRITO POPUP ──────────────── */
+.carrito-container {
+  position: relative;
+}
+
+#carrito-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.4rem;
+  position: relative;
+}
+
+#carrito-count {
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 0.18rem 0.5rem;
+  font-size: 0.75rem;
+  position: absolute;
+  top: -8px;
+  right: -10px;
+}
+
+.carrito-popup {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 280px;
+  max-width: 90vw;
+  background: white;
+  color: black;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  padding: 0.5rem;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  transition: opacity 150ms ease, transform 150ms ease, visibility 150ms;
+}
+
+.carrito-popup.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.carrito-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid #eee;
+  font-size: 0.9rem;
+}
+
+.carrito-item-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: #c43;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: transform 0.2s;
+}
+
+.remove-btn:hover {
+  transform: scale(1.15);
+}
+
+.carrito-total {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 0.5rem;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.empty-cart {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #555;
+  padding: 0.5rem;
+}
+
+/* ──────────────── MAIN ──────────────── */
+main {
+  flex: 1;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+}
+
+.page-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  text-align: center;
+  color: #1a1a1a;
+  margin: 3rem 0 2.5rem 0;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  position: relative;
+}
+
+.page-title::after {
+  content: "";
+  display: block;
+  height: 3px;
+  width: 140px;
+  background: rgba(0, 0, 0, 0.12);
+  margin: 1rem auto 0 auto;
+  border-radius: 1px;
+}
+
+/* ──────────────── TARJETAS DE PRODUCTO (LISTA CENTRADA) ──────────────── */
+.catalogo-grid {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* tarjeta: fila flex (imagen | contenido) y alto base */
+.card, .card2 {
+  display: flex;
+  gap: 1rem;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transition: all 0.45s cubic-bezier(.2,.9,.2,1);
+  width: 90%;
+  max-width: 700px;
+  min-width: 300px;
+  height: 320px;   /* <-- aumentado de 260px a 320px para más espacio vertical */
+  cursor: pointer;
+  align-items: stretch;
+  position: relative; /* necesario para close button absoluto */
+  margin: 0 auto;
+}
+
+/* hover ligero para indicar clic */
+.card:hover, .card2:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.14);
+}
+
+/* colores por categoría */
+.card { background: linear-gradient(to right, #1B142E, #584094); }
+.card2 { background: linear-gradient(to right, #642B0B, #D45510); }
+
+/* contenedor de imagen */
+.card-media {
+  flex: 0 0 45%; /* <-- reducido de 40% a 35% para dar más espacio al texto */
+  height: 100%;
+  overflow: hidden;
+}
+
+.card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 200ms ease;
+}
+
+/* contenido */
+.card-content, .card-content2 {
+  flex: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  color: white;
+}
+
+.inner-card, .inner-card2 {
+  position: relative;        /* referencia para .precio absoluto */
+  padding-bottom: 3.2rem;
+  background: rgba(0,0,0,0.25);
+  border-radius: 10px;
+  padding: 1rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* título y texto */
+.inner-card h2, .inner-card2 h2 {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: .5rem;
+}
+
+/* --- DESCRIPCIÓN CORTA: visible en colapsado, limitada en tamaño --- */
+.short-desc {
+  font-size: .95rem;
+  color: white;
+  margin-bottom: 0.6rem;
+  overflow: hidden;
+  max-height: 10rem; /* <-- aumentado para permitir más líneas visibles */
+  line-height: 1.2;
+}
+
+/* el precio que se muestra en vista normal (oculto en expandido) */
+.precio, .precio2 {
+  position: absolute;
+  bottom: 0.9rem;    /* separación desde la base del .inner-card */
+  right: 1rem;       /* separación desde la derecha del .inner-card */
+  margin: 0;
+  /* opciones estéticas (opcional): una pequeña "placa" para que el precio destaque */
+  background: rgba(0,0,0,0.18); /* muy sutil, quítalo si no quieres fondo */
+  padding: 0.18rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 800;
+  z-index: 5;
+  font-weight: bold;
+  text-align: right;
+  color: white;
+  margin-top: auto;
+}
+
+/* botón base (solo visible en expandido; la clase .add-to-cart-btn se usa in footer expandido) */
+.add-to-cart-btn {
+  background: white;
+  color: #222;
+  border: none;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+
+/* hover para botones */
+.add-to-cart-btn:hover {
+  background: #ddd;
+}
+
+/* ──────────────── EXPANSIÓN DE TARJETA (EN FLUJO) ──────────────── */
+/* la tarjeta expandida empuja a las demás, crece y muestra contenido extra */
+.card.expanded, .card2.expanded {
+  width: 95%;
+  max-width: 1000px;
+  height: 70vh; /* grande pero en flujo: empuja hacia abajo */
+  min-height: 520px;
+  transform: none;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+
+/* ocultar el precio normal cuando está expandida (porque lo mostramos abajo) */
+.card.expanded .precio, .card2.expanded .precio,
+.card.expanded .precio2, .card2.expanded .precio2 {
+  display: none;
+}
+
+/* centrar el título SOLO en modo expandido */
+.card.expanded .inner-card h2, .card2.expanded .inner-card2 h2 {
+  text-align: center;
+}
+
+/* ocultar descripción corta en modo expandido */
+.card.expanded .short-desc, .card2.expanded .short-desc {
+  display: none;
+}
+
+/* cuando está expandida, mostramos el botón cerrar */
+.card .close-btn, .card2 .close-btn {
+  display: none;
+}
+.card.expanded .close-btn, .card2.expanded .close-btn {
+  display: block;
+}
+
+/* botón de cierre absoluto en esquina superior izquierda */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(255,255,255,0.06);
+  border: none;
+  color: white;
+  font-size: 1.4rem;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease;
+  z-index: 30;
+}
+.close-btn:hover { transform: scale(1.08); background: rgba(255,255,255,0.1); }
+
+/* contenido extra que aparece al expandir: lo hacemos flex-column para forzar el footer abajo */
+.extra-content {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.35s ease 0.12s;
+  margin-top: 0.8rem;
+  flex: 1;
+  flex-direction: column;
+}
+
+/* cuando esté expandida, mostramos contenido extra */
+.card.expanded .extra-content,
+.card2.expanded .extra-content {
+  display: flex;
+  opacity: 1;
+}
+
+/* estructura dentro del extra-content:
+   - extra-desc (con descripcionDetallada, detalles, unidades) justo debajo del título
+   - galería horizontal
+   - footer expandido al final con precio y botón */
+.extra-desc {
+  color: white;
+  overflow: auto;
+  padding-right: 0.5rem;
+}
+
+/* galería horizontal de miniaturas (solo visible en expandido) */
+.extra-gallery {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+  align-items: center;
+}
+
+/* miniaturas */
+.extra-gallery img {
+  width: 84px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.12);
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  opacity: 0.95;
+}
+
+/* estado seleccionado */
+.extra-gallery img.selected {
+  border: 2px solid rgba(255,255,255,0.95);
+  transform: scale(1.04);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+/* footer expandido: pegado abajo dentro del extra-content (margin-top:auto) */
+.expanded-footer {
+  margin-top: auto; /* empuja al final */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* precio grande en footer expandido */
+.expanded-footer .precio-expanded {
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+
+/* botón de añadir en footer expandido */
+.expanded-footer .add-to-cart-btn {
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  font-weight: 800;
+}
+
+/* ──────────────── HERO (PÁGINA INICIO) ──────────────── */
+.hero {
+  text-align: center;
+  padding: 4rem 1rem;
+  background: linear-gradient(135deg, #D45510, #ffb347);
+  color: white;
+  border-radius: 16px;
+  max-width: 900px;
+  margin: 2rem auto;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.hero h1 {
+  font-size: 2.4rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.cta-btn {
+  background: white;
+  color: #D45510;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 0.8rem 1.4rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: background 0.2s ease;
+}
+
+.cta-btn:hover {
+  background: #eee;
+}
+
+/* ──────────────── FOOTER ──────────────── */
+footer {
+  background: white;
+  color: #222;
+  padding: 1.5rem;
+  text-align: center;
+  margin-top: auto;
+  border-top: 1px solid #ddd;
+}
+
+footer .footer-icons {
+  margin-top: 0.8rem;
+  display: flex;
+  justify-content: center;
+  gap: 12rem; /* separación mayor entre iconos */
+}
+
+footer .footer-icons img {
+  width: 24px;
+  height: 24px;
+  filter: none;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+footer .footer-icons img:hover {
+  transform: scale(1.15);
+}
+
+/* ──────────────── PÁGINA DE CARRITO ──────────────── */
+.carrito-page {
+  max-width: 900px;
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Lista de productos en carrito */
+.carrito-lista {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 1rem;
+}
+
+.carrito-item-page {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 0.8rem 0;
+}
+
+.carrito-item-info-page {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.carrito-item-info-page img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.carrito-item-info-page .nombre {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.carrito-item-precio {
+  font-weight: bold;
+  color: #333;
+}
+
+.remove-btn-page {
+  background: none;
+  border: none;
+  color: #c43;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+.remove-btn-page:hover {
+  transform: scale(1.1);
+}
+
+/* Resumen */
+.resumen-compra {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 1rem;
+}
+
+.resumen-compra h2 {
+  margin-bottom: 0.8rem;
+}
+
+.resumen-linea {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.4rem 0;
+}
+
+.resumen-linea.total {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+/* Formulario */
+.checkout-form {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  padding: 1rem;
+}
+
+.checkout-form h2 {
+  margin-bottom: 1rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.form-row label {
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+}
+
+.form-row input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.checkout-btn {
+  background: #D45510;
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  transition: background 0.2s ease;
+}
+
+.checkout-btn:hover {
+  background: #a8430d;
+}
+
+/* ──────────────── CHECKOUT (carrito.html) ──────────────── */
+/* botón volver */
+.volver-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #D45510;
+  font-weight: bold;
+  z-index: 1000;
+}
+
+.volver-btn:hover {
+  text-decoration: underline;
+}
+
+.pago-doble {
+  display: flex;
+  gap: 1rem;
+}
+
+.pago-doble div {
+  flex: 1;
+}
+
+#tarjeta, #expiracion, #cvv {
+  font-family: monospace;
+  letter-spacing: 1px;
+}
+
+/* ──────────────── STYLES PARA LOGIN / AUTENTICACIÓN ──────────────── */
+.auth-body {
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: linear-gradient(180deg, rgba(245,245,245,0.6), rgba(245,245,245,0.9));
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  padding: 1.8rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  text-align: center;
+}
+
+.auth-container h1 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 0.4rem;
+  text-align: left;
+}
+
+.auth-form label {
+  display: block;
+  font-size: 0.95rem;
+  color: #444;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.auth-form input[type="email"],
+.auth-form input[type="password"],
+.auth-form input[type="text"],
+.auth-form input[type="tel"],
+.auth-form input[type="number"],
+.auth-form textarea {
+  width: 100%;
+  padding: 0.66rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+  outline: none;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+  background: #fff;
+}
+
+.auth-form input:focus,
+.auth-form textarea:focus {
+  border-color: #D45510;
+  box-shadow: 0 0 0 6px rgba(212,85,16,0.08);
+}
+
+.auth-btn {
+  margin-top: 0.6rem;
+  background: #D45510;
+  color: #fff;
+  padding: 0.8rem 1rem;
+  border: none;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.06s ease;
+}
+
+.auth-btn:hover { background: #b3460d; transform: translateY(-2px); }
+.auth-btn:active { transform: translateY(0); }
+
+.auth-switch {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: #444;
+  text-align: center;
+}
+
+.auth-switch a {
+  color: #D45510;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+/* ──────────────── MEDIA QUERIES (BÁSICOS) ──────────────── */
+@media (max-width: 900px) {
+  .card.expanded, .card2.expanded {
+    width: 95%;
+    height: auto;
+    min-height: 520px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .menu {
+    display: none;
+  }
+
+  .catalogo-grid {
+    gap: 1.2rem;
+  }
+
+  .card, .card2 {
+    flex-direction: column;
+    height: auto;
+    min-height: 400px;
+  }
+
+  .card-media {
+    width: 100%;
+    height: 200px;
+    flex: 0 0 auto;
+  }
+
+  .card.expanded, .card2.expanded {
+    width: 95%;
+    height: auto;
+    min-height: 520px;
+  }
+
+  /* footer icons in column on small screens */
+  footer .footer-icons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+    margin: 2rem 0 1.5rem 0;
+  }
+}
+
+/* ──────────────── MENÚ HAMBURGUESA MÓVIL ──────────────── */
+
+.hamburguesa-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 1001;
+}
+
+.hb-line {
+  display: block;
+  width: 100%;
+  height: 3px;
+  background-color: #222;
+  border-radius: 3px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Animación al abrir */
+.hamburguesa-btn.open .hb-line-1 {
+  transform: translateY(8px) rotate(45deg);
+}
+.hamburguesa-btn.open .hb-line-2 {
+  opacity: 0;
+}
+.hamburguesa-btn.open .hb-line-3 {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Panel lateral */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 260px;
+  height: 100vh;
+  background: white;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+  transition: left 0.3s ease;
+  z-index: 1001;
+  padding-top: 2rem;
+}
+
+.mobile-menu.open {
+  left: 0;
+}
+
+.mobile-menu .cerrar-menu {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.mobile-menu ul {
+  list-style: none;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mobile-menu a {
+  color: #1B142E;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+
+.mobile-menu a:hover {
+  color: #D45510;
+}
+
+/* Fondo oscuro al abrir menú */
+.menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 1000;
+}
+
+.menu-overlay.show {
+  display: block;
+}
+
+/* ──────────────── RESPONSIVE HEADER ──────────────── */
+@media (max-width: 768px) {
+  
+  nav {
+    justify-content: space-between;
+  }
+
+  .menu {
+    display: none; 
+  }
+
+  .hamburguesa-btn {
+    display: block; 
+  }
+
+  .logo {
+    flex: 1;
+    text-align: center;
+  }
+
+  .user-actions {
+    gap: 0.5rem;
+  }
+
+  .perfil-container {
+    display: none;
+  }
+}
+
+/* ──────────────── CARRITO MÓVIL ──────────────── */
+@media (max-width: 768px) {
+  #cart-btn {
+    transition: all 0.3s ease;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+  }
+
+  #cart-btn.ver-carrito-activo {
+    background: #D45510;
+    color: white;
+    padding: 0.4rem 0.7rem;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  #cart-popup {
+    position: absolute;
+    right: 1rem;
+    top: 3.5rem;
+    width: 85%;
+    max-width: 300px;
+    display: none;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 50;
+  }
+}
+
+/* ──────────────── FOOTER GENERAL ──────────────── */
+footer {
+  background: white;
+  color: #333;
+  text-align: center;
+  padding: 2rem 1rem;
+  border-top: 1px solid #ddd;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+footer .footer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+footer .footer-container h2.contact-text {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+footer .footer-icons {
+  display: flex;
+  flex-direction: row;   
+  gap: 12rem;            
+  justify-content: center;
+  align-items: center;
+}
+
+footer .footer-icons img {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+footer .footer-icons img:hover {
+  transform: scale(1.1);
+}
+
+/* ──────────────── FOOTER - VERSIÓN MÓVIL ──────────────── */
+@media (max-width: 768px) {
+  footer {
+    padding: 1rem;          
+    font-size: 0.85rem;        
+  }
+
+  footer .footer-container h2.contact-text {
+    font-size: 1rem;           
+    margin-bottom: 0.5rem;
+  }
+
+  footer .footer-icons {
+    flex-direction: row;       
+    gap: 6rem;              
+    justify-content: center;
+  }
+
+  footer .footer-icons img {
+    width: 20px;             
+    height: 20px;
+  }
+}
+
+/* ---------- Estilos para el control de orden (sort) ---------- */
+.sort-controls-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 0 0 1rem 0;
+  padding-left: 6px;
+}
+
+.sort-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.sort-label {
+  font-weight: 700;
+  color: #333;
+  font-size: 0.95rem;
+  margin-right: 0.25rem;
+  white-space: nowrap;
+}
+
+#sort-select {
+  padding: 0.45rem 0.65rem;
+  border-radius: 10px;
+  border: 1px solid rgba(27,20,46,0.08);
+  background: linear-gradient(180deg, #ffffff, #fbfbfb);
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 3px 10px rgba(27,20,46,0.03);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  cursor: pointer;
+}
+
+#sort-select:focus {
+  outline: none;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(212,85,16,0.08);
+  border-color: rgba(212,85,16,0.9);
+}
+
+.sort-indicator {
+  font-size: 0.92rem;
+  color: #666;
+  font-weight: 600;
+  background: rgba(27,20,46,0.04);
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(27,20,46,0.03);
+  white-space: nowrap;
+}
+
+/* mobile tweaks */
+@media (max-width: 768px) {
+  .sort-controls-wrapper {
+    justify-content: center;
+    margin: 0 0 0.8rem 0;
+    gap: 0.4rem;
+  }
+  .sort-label { display: none; }
+  #sort-select { font-size: 0.95rem; padding: 0.45rem 0.6rem; }
+  .sort-indicator { display: none; } 
+}
+
+/* ------------------ BÚSQUEDA (header) ------------------ */
+
+/* wrapper junto al logo */
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: 0.6rem; 
+  position: relative;
+  z-index: 1200;
+}
+
+/* botón de lupa */
+.search-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.05rem;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 8px;
+  transition: background 140ms ease, transform 120ms ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-btn:hover {
+  background: rgba(255,255,255,0.08);
+  transform: translateY(-2px);
+}
+
+/* contenedor del input (inicialmente oculto) */
+.search-input-container {
+  position: absolute;
+  left: 48px;
+  top: -6px;
+  min-width: 320px;
+  max-width: 420px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  padding: 0.45rem;
+  display: none;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+/* cuando se abre, se usará .open (JS) para mostrar */
+.search-input-container.open {
+  display: flex;
+}
+
+/* input */
+#search-input {
+  width: 100%;
+  border: 1px solid rgba(27,20,46,0.06);
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: box-shadow 120ms ease, border-color 120ms ease;
+}
+
+#search-input:focus {
+  border-color: rgba(212,85,16,0.9);
+  box-shadow: 0 6px 20px rgba(212,85,16,0.06);
+}
+
+/* resultados (pop-up pequeño) */
+.search-results {
+  max-height: 240px;
+  overflow-y: auto;
+  background: transparent;
+  padding: 0.25rem;
+  border-radius: 6px;
+}
+
+/* cada item */
+.search-results .result-item {
+  padding: 0.55rem 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  display: block;
+  color: #222;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: background 120ms ease, transform 80ms ease;
+}
+
+.search-results .result-item + .result-item {
+  margin-top: 0.15rem;
+}
+
+.search-results .result-item:hover,
+.search-results .result-item.active {
+  background: rgba(27,20,46,0.06);
+  transform: translateX(3px);
+}
+
+/* resultado pequeño (categoría) */
+.result-item .cat {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #666;
+  margin-left: 0.5rem;
+  background: rgba(0,0,0,0.03);
+  padding: 0.12rem 0.35rem;
+  border-radius: 6px;
+}
+
+
+@media (max-width: 768px) {
+  .search-input-container {
+    display: none !important;
+  }
+  .search-wrapper { margin-left: 0.4rem; }
+}
+
+.search-input-container { z-index: 1300; }
+
+/* ============================
+   HEADER - LAYOUT MÓVIL / HAMBURGUESA
+   ============================ */
+
+
+/* base para nav principal */
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+/* Hamburger button (hidden on desktop) */
+.hamburguesa-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  padding: 0.4rem;
+  margin-left: 0.2rem;
+  cursor: pointer;
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* las 3 líneas */
+.hb-line {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: white;
+  margin: 3px 0;
+  transition: transform 180ms ease, opacity 160ms ease;
+  border-radius: 2px;
+}
+
+/* Logo: concentración y tamaño */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.logo img {
+  max-height: 48px;
+  display: block;
+}
+
+/* Search wrapper ya existente; aseguramos z-index para que no quede debajo */
+.search-wrapper { z-index: 1200; }
+
+/* Menu desktop por defecto visible; ocultamos en móvil */
+.menu {
+  display: flex;
+  gap: 1.4rem;
+  justify-content: center;
+  flex: 1;
+}
+
+/* user-actions se mantiene en la derecha */
+.user-actions { display: flex; gap: 0.8rem; align-items: center; }
+
+/* ---------- MOBILE RULES (<=768) ---------- */
+@media (max-width: 768px) {
+  /* mostrar hamburguesa y adaptar posición */
+  .hamburguesa-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* re-ordenamos elementos: hamburguesa (left), logo (center), user-actions (right) */
+  .main-nav {
+    display: grid;
+    grid-template-columns: 48px 1fr 120px;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  /* centramos el logo en su celda */
+  .logo { justify-self: center; }
+  .menu { display: none; }
+
+  .search-input-container { display: none !important; }
+
+  .perfil-text { display: none; }
+  .perfil-icon { font-size: 1.2rem; }
+
+  .user-actions { justify-self: end; grid-column: 3; }
+
+  .logo img { max-height: 44px; }
+}
+
+/* ============================
+   MOBILE MENU (overlay & panel)
+   ============================ */
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+  z-index: 1450;
+}
+
+/* overlay visible */
+.menu-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* panel lateral (desliza desde la izquierda) */
+.mobile-menu {
+  position: fixed;
+  left: -320px;
+  top: 0;
+  height: 100vh;
+  width: 320px;
+  max-width: 86%;
+  background: #ffffff;
+  color: #1B142E;
+  box-shadow: 6px 0 24px rgba(0,0,0,0.14);
+  transition: left 260ms cubic-bezier(.2,.9,.3,1);
+  z-index: 1500;
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* cuando se abre */
+.mobile-menu.open {
+  left: 0;
+}
+
+/* botón cerrar dentro */
+.mobile-close {
+  background: none;
+  border: none;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1B142E;
+  align-self: flex-end;
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+/* items del menú móvil */
+.mobile-nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+  padding: 0;
+}
+.mobile-nav a {
+  display: block;
+  text-decoration: none;
+  color: #1B142E;
+  padding: 0.8rem 0.6rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: background 140ms ease, transform 90ms ease;
+}
+.mobile-nav a:hover {
+  background: rgba(27,20,46,0.04);
+  transform: translateX(4px);
+}
+
+/* =========================
+   BUSCADOR MÓVIL FULLSCREEN
+   ========================= */
+
+#mobile-search-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2.2rem 1rem;
+  z-index: 9999;
+}
+
+#mobile-search-overlay.active {
+  display: flex;
+  animation: mobileSearchFade 220ms ease both;
+}
+
+@keyframes mobileSearchFade {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.mobile-search-box {
+  width: 100%;
+  max-width: 780px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Header del buscador: input centrado */
+.mobile-search-header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+#mobile-search-input {
+  width: 92%;
+  max-width: 720px;
+  padding: 0.9rem 1rem;
+  border-radius: 999px;
+  border: none;
+  font-size: 1.05rem;
+  outline: none;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.95);
+}
+
+#mobile-search-close {
+  position: absolute;
+  right: 6%;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: #222;
+  cursor: pointer;
+}
+
+/* resultados */
+.mobile-search-results {
+  width: 100%;
+  max-width: 720px;
+  background: rgba(255,255,255,0.98);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  max-height: 62vh;
+  overflow-y: auto;
+}
+
+.mobile-search-results ul {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0;
+}
+
+.mobile-search-results li {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  cursor: pointer;
+  font-weight: 700;
+  color: #222;
+}
+
+.mobile-search-results li:hover {
+  background: rgba(27,20,46,0.04);
+  transform: translateX(3px);
+}
+
+/* Ocultar buscador desktop en móvil */
+@media (max-width: 768px) {
+  .search-wrapper {
+    display: none !important;
+  }
+}
+
+/* ---------------------------
+   STYLES PARA BOTÓN BÚSQUEDA MÓVIL
+   Se cubren varias clases posibles para evitar mismatch
+   --------------------------- */
+
+@media (max-width: 768px) {
+  .mobile-search-button,
+  .mobile-search-btn,
+  .mobile-search-area button,
+  #mobile-menu .mobile-search-button,
+  #mobile-menu .mobile-search-btn,
+  #mobile-menu .mobile-search-area button {
+    display: block !important;       
+    width: calc(100% - 2rem) !important;
+    margin: 0.5rem 1rem !important;
+    padding: 0.85rem 1rem !important;
+    background: #D45510 !important;  
+    color: #fff !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    border: none !important;
+    border-radius: 10px !important;
+    text-align: left !important;
+    cursor: pointer !important;
+    box-shadow: 0 6px 18px rgba(212,85,16,0.18) !important;
+    transition: transform 150ms ease, box-shadow 160ms ease !important;
+    outline: none !important;
+  }
+
+  .mobile-search-button:hover,
+  .mobile-search-btn:hover,
+  .mobile-search-area button:hover {
+    transform: translateY(-3px);
+    background: #b3460d !important;
+  }
+
+  .mobile-search-button:active,
+  .mobile-search-btn:active,
+  .mobile-search-area button:active {
+    transform: translateY(0);
+  }
+
+  .mobile-search-button .icon,
+  .mobile-search-btn .icon {
+    margin-right: 0.6rem;
+    font-size: 1.05rem;
+  }
+}
