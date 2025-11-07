@@ -1,0 +1,110 @@
+<header>
+  <nav class="main-nav">
+    <button id="hamburguesa-btn" class="hamburguesa-btn" aria-label="Abrir menú">
+      <span class="hb-line hb-line-1"></span>
+      <span class="hb-line hb-line-2"></span>
+      <span class="hb-line hb-line-3"></span>
+    </button>
+
+    <div class="logo">
+      <a href="index.html"><img src="Imagenes/Logo.png" alt="logo"></a>
+    </div>
+
+    <div class="search-wrapper" aria-hidden="false">
+      <button id="search-btn" class="search-btn" aria-label="Buscar">🔍</button>
+      <div id="search-input-container" class="search-input-container" aria-hidden="true">
+        <input id="search-input" type="search" placeholder="Buscar productos..." aria-label="Buscar productos" />
+        <div id="search-results" class="search-results" role="listbox" aria-label="Resultados de búsqueda"></div>
+      </div>
+    </div>
+
+    <div class="menu">
+      <a href="index.html">INICIO</a>
+      <a href="juegos.html">JUEGOS</a>
+      <a href="decoracion.html">DECORACIÓN</a>
+      <a href="catalogo.html">CATÁLOGO</a>
+    </div>
+
+    <div class="user-actions" style="position: relative; display: flex; align-items: center; gap: 20px;">
+      <!-- Botón iniciar sesión -->
+      <div class="perfil-container" id="loginBtn" onclick="window.location.href='login.html'" style="cursor:pointer; display:flex; align-items:center;">
+        <span class="perfil-icon">👤</span>
+        <span class="perfil-text" style="margin-left:6px;">Iniciar sesión</span>
+      </div>
+
+      <!-- Perfil usuario con nombre y menú desplegable -->
+      <div class="perfil-container" id="userProfile" style="display:none; cursor:pointer; align-items:center; gap: 4px; font-weight:700; position: relative;">
+        <span id="userName"></span>
+        <span id="userTriangle" style="font-weight: 900; user-select:none;">▼</span>
+
+        <div id="userMenu" style="
+          display:none;
+          position: absolute;
+          top: 28px;
+          right: 0;
+          background: white;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+          min-width: 140px;
+          z-index: 100;
+        ">
+          <button id="logoutBtn" style="
+            width: 100%;
+            padding: 8px 12px;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            font-weight: 700;
+          ">Cerrar sesión</button>
+        </div>
+      </div>
+
+      <!-- Carrito -->
+      <div class="carrito-container" style="position: relative;">
+        <button id="carrito-btn" class="carrito-btn" aria-label="Carrito de compras">🛒 <span id="carrito-count">0</span></button>
+        <div id="carrito-popup" class="carrito-popup" style="display:none; position:absolute; right:0; background:white; border:1px solid #ccc; border-radius:8px; width: 280px; max-height: 350px; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 150;"></div>
+      </div>
+    </div>
+  </nav>
+
+  <div id="menu-overlay" class="menu-overlay" aria-hidden="true"></div>
+
+  <aside id="mobile-menu" class="mobile-menu" aria-hidden="true">
+    <button id="cerrar-menu" class="mobile-close" aria-label="Cerrar menú">✖</button>
+
+    <div class="mobile-search-area" style="margin-bottom:0.6rem;">
+      <button class="mobile-search-button">🔍 Buscar</button>
+    </div>
+
+    <nav class="mobile-nav">
+      <ul>
+        <li><a href="juegos.html">JUEGOS</a></li>
+        <li><a href="decoracion.html">DECORACIÓN</a></li>
+        <li><a href="catalogo.html">CATÁLOGO</a></li>
+        <li><a href="login.html">INICIAR SESIÓN</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <script type="module">
+    import { initAuthUI } from './Inicisesion.js';
+
+    initAuthUI({
+      loginBtnSelector: '#loginBtn',
+      userProfileSelector: '#userProfile',
+      userNameSelector: '#userName',
+      userMenuSelector: '#userMenu',
+      logoutBtnSelector: '#logoutBtn'
+    });
+  </script>
+
+  <script>
+    if (typeof inicializarMenuHamburguesa === 'function') {
+      try { inicializarMenuHamburguesa(); } catch(e) { /* ignore */ }
+    }
+  </script>
+</header>
+
+

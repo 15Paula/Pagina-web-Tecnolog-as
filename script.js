@@ -5,7 +5,6 @@
 /* ===========================
    Estado inicial y utilidades
    =========================== */
-
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 let allProducts = null;            // cache de productos.json
 const SORT_STORAGE_KEY = 'catalogSortOption';

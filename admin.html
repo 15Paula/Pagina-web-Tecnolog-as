@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin – Gestión de Productos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen p-6 bg-gray-100 font-sans">
+
+  <h1 class="text-3xl font-bold mb-6">Panel de Administración 🛠️</h1>
+
+  <!-- FORMULARIO -->
+  <div class="bg-white shadow-lg rounded-xl p-6 mb-10 max-w-2xl">
+    <h2 class="text-xl font-bold mb-4" id="form-title">Añadir producto</h2>
+
+    <form id="product-form" class="space-y-4">
+      <div>
+        <label class="font-semibold block mb-1" for="nombre">Nombre</label>
+        <input id="nombre" type="text" required
+          class="w-full p-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <div>
+        <label class="font-semibold block mb-1" for="descripcion">Descripción</label>
+        <textarea id="descripcion" rows="2" required
+          class="w-full p-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+      </div>
+
+      <div>
+        <label class="font-semibold block mb-1" for="precio">Precio</label>
+        <input id="precio" type="number" required
+          class="w-full p-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <div>
+        <label class="font-semibold block mb-1" for="categoria">Categoría</label>
+        <select id="categoria" class="w-full p-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="juegos">Juegos</option>
+          <option value="decoracion">Decoración</option>
+          <option value="otros">Otros</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="font-semibold block mb-1" for="imagen">URL Imagen</label>
+        <input id="imagen" type="text" required
+          class="w-full p-2 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <button type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg shadow-md transition duration-200">
+        Guardar Producto
+      </button>
+    </form>
+  </div>
+
+  <!-- LISTA DE PRODUCTOS -->
+  <h2 class="text-2xl font-bold mb-3">Productos registrados</h2>
+
+  <table class="w-full bg-white shadow-lg rounded-xl overflow-hidden">
+    <thead class="bg-gray-200">
+      <tr>
+        <th class="p-3 text-left">Nombre</th>
+        <th class="p-3 text-left">Categoría</th>
+        <th class="p-3 text-left">Precio</th>
+        <th class="p-3 text-left">Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="product-table"></tbody>
+  </table>
+
+  <script type="module">
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+    import { 
+      getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc 
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+    // Configuración Firebase (usa tu propia configuración)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAQWzV5B7x8pChiuSggrLFGj753i0kySCU",
+      authDomain: "login-93039.firebaseapp.com",
+      projectId: "login-93039",
+      storageBucket: "login-93039.appspot.com",
+      messagingSenderId: "428055807133",
+      appId: "1:428055807133:web:22dee2f9c08b15bce80074"
+    };
+
+    // Inicializar Firebase y Firestore
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const productsRef = collection(db, "products");
+
+    // Elementos DOM
+    const form = document.getElementById("product-form");
+    const table = document.getElementById("product-table");
+    const formTitle = document.getElementById("form-title");
+
+    let editId = null; // id para edición
+
+    // Cargar productos y mostrarlos
+    async function loadProducts() {
+      const snapshot = await getDocs(productsRef);
+      table.innerHTML = "";
+
+      snapshot.forEach(docu => {
+        const p = docu.data();
+        const row = document.createElement("tr");
+        row.className = "border-b";
+
+        row.innerHTML = `
+          <td class="p-3">${p.nombre}</td>
+          <td class="p-3">${p.categoria}</td>
+          <td class="p-3">$${p.precio}</td>
+          <td class="p-3 flex gap-2">
+            <button class="px-3 py-1 bg-yellow-500 text-white rounded" data-id="${docu.id}" onclick="editProduct('${docu.id}')">Editar</button>
+            <button class="px-3 py-1 bg-red-600 text-white rounded" onclick="deleteProduct('${docu.id}')">Eliminar</button>
+          </td>
+        `;
+
+        table.appendChild(row);
+      });
+    }
+
+    // Guardar o editar producto
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const data = {
+        nombre: form.nombre.value.trim(),
+        descripcion: form.descripcion.value.trim(),
+        precio: Number(form.precio.value),
+        categoria: form.categoria.value,
+        imagen: form.imagen.value.trim()
+      };
+
+      if (editId) {
+        await updateDoc(doc(db, "products", editId), data);
+        editId = null;
+        formTitle.textContent = "Añadir producto";
+      } else {
+        await addDoc(productsRef, data);
+      }
+
+      form.reset();
+      loadProducts();
+    });
+
+    // Eliminar producto
+    window.deleteProduct = async (id) => {
+      await deleteDoc(doc(db, "products", id));
+      loadProducts();
+    };
+
+    // Editar producto (llenar formulario)
+    window.editProduct = async (id) => {
+      const docRef = doc(db, "products", id);
+      const snap = await getDocs(productsRef);
+
+      snap.forEach(d => {
+        if (d.id === id) {
+          const p = d.data();
+          form.nombre.value = p.nombre;
+          form.descripcion.value = p.descripcion;
+          form.precio.value = p.precio;
+          form.categoria.value = p.categoria;
+          form.imagen.value = p.imagen;
+        }
+      });
+
+      editId = id;
+      formTitle.textContent = "Editar producto";
+    };
+
+    // Inicializar carga de productos
+    loadProducts();
+
+  </script>
+
+</body>
+</html>
+
+

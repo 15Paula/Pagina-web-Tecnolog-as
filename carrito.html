@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout y Carrito</title>
+    <!-- Carga de Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configuración de la fuente Inter -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        .container-shadow {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        .carrito-item-page {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        .carrito-item-info-page {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .carrito-item-info-page img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .carrito-item-precio {
+            font-weight: 700;
+            color: #D45510;
+            min-width: 80px;
+            text-align: right;
+        }
+        .remove-btn-page {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-left: 10px;
+            transition: transform 0.2s;
+        }
+        .remove-btn-page:hover {
+            transform: scale(1.1);
+        }
+        .total-summary span:last-child {
+            font-weight: 700;
+            color: #333;
+        }
+        .input-style {
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+        .input-style:focus {
+            border-color: #D45510;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(212, 85, 16, 0.2);
+        }
+        /* Estilo para los inputs de cantidad */
+        .cantidad-input {
+            appearance: textfield; /* Para Firefox */
+        }
+        .cantidad-input::-webkit-outer-spin-button,
+        .cantidad-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-6 border-b pb-2">Finalizar Compra</h1>
+        
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Columna del Carrito (Izquierda) -->
+            <div class="lg:w-7/12 bg-white p-6 rounded-xl container-shadow">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">Tu Carrito de Compras</h2>
+                
+                <!-- Lista de Ítems del Carrito -->
+                <div id="carrito-lista">
+                    <!-- Los items se renderizarán aquí por JavaScript -->
+                    <div class="text-center p-8 text-gray-500">Cargando carrito...</div>
+                </div>
+
+                <!-- Resumen de Totales -->
+                <div class="mt-8 pt-4 border-t border-gray-200">
+                    <div class="flex justify-between text-lg mb-2 total-summary">
+                        <span>Subtotal:</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    <div class="flex justify-between text-lg mb-2 total-summary">
+                        <span>Impuestos (19%):</span>
+                        <span id="impuestos">$0.00</span>
+                    </div>
+                    <div class="flex justify-between text-2xl font-bold pt-2 border-t mt-4 border-gray-300 total-summary">
+                        <span>Total:</span>
+                        <span id="total" class="text-2xl text-red-600">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna del Checkout (Derecha) -->
+            <div class="lg:w-5/12 bg-white p-6 rounded-xl container-shadow">
+                <h2 class="text-2xl font-semibold mb-4 text-gray-700">Detalles de Envío y Pago</h2>
+                
+                <form id="checkoutForm" class="space-y-4">
+                    <!-- Sección de Envío -->
+                    <h3 class="text-xl font-medium pt-2 border-t border-gray-100 mt-4">Información de Contacto</h3>
+                    <input type="text" id="nombre" name="nombre" placeholder="Nombre Completo" required class="w-full input-style">
+                    <input type="email" id="correo" name="correo" placeholder="Correo Electrónico" required class="w-full input-style">
+                    
+                    <h3 class="text-xl font-medium pt-2 border-t border-gray-100 mt-4">Dirección de Envío</h3>
+                    <input type="text" id="direccion" name="direccion" placeholder="Dirección" required class="w-full input-style">
+                    <div class="flex space-x-4">
+                        <input type="text" id="ciudad" name="ciudad" placeholder="Ciudad" required class="w-1/2 input-style">
+                        <input type="tel" id="telefono" name="telefono" placeholder="Teléfono" required class="w-1/2 input-style">
+                    </div>
+
+                    <!-- Sección de Pago -->
+                    <h3 class="text-xl font-medium pt-2 border-t border-gray-100 mt-4">Información de Pago (Simulada)</h3>
+                    <input type="text" id="tarjeta" name="tarjeta" placeholder="Número de Tarjeta (XXXX XXXX XXXX XXXX)" required 
+                           pattern="[\d ]{19}" title="Debe ser un número de tarjeta válido" 
+                           maxlength="19" class="w-full input-style">
+                    <div class="flex space-x-4">
+                        <input type="text" id="expiracion" name="expiracion" placeholder="MM/AA" required 
+                               pattern="\d{2}/\d{2}" title="Formato MM/AA" maxlength="5" class="w-1/2 input-style">
+                        <input type="text" id="cvv" name="cvv" placeholder="CVV" required 
+                               pattern="\d{3,4}" title="CVV (3 o 4 dígitos)" maxlength="4" class="w-1/2 input-style">
+                    </div>
+
+                    <button type="submit" id="checkout-btn" 
+                            class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3 rounded-xl transition duration-300 transform hover:scale-[1.01]">
+                        Pagar Ahora y Vaciar Carrito
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Script de Firebase y Lógica de la Aplicación -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { 
+            getAuth, 
+            signInAnonymously, 
+            signInWithCustomToken, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            onSnapshot, 
+            collection, 
+            updateDoc, 
+            deleteDoc,
+            addDoc,
+            query,
+            getDocs,
+            setDoc, // Agregado en caso de ser necesario
+            getDoc // Agregado en caso de ser necesario
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // Variables globales provistas por el entorno (MANDATORIO USAR)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db;
+        let auth;
+        let userId = null;
+        let isAuthReady = false;
+
+        // Inicialización de Firebase
+        if (firebaseConfig) {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            // 1.1. Gestión de autenticación
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userId = user.uid;
+                    console.log("Usuario autenticado. UID:", userId);
+                    isAuthReady = true;
+                    // Solo iniciamos la escucha del carrito cuando la autenticación esté lista
+                    listenToCartChanges(userId); 
+                } else {
+                    console.log("No hay usuario, iniciando sesión anónima...");
+                    try {
+                        if (initialAuthToken) {
+                            await signInWithCustomToken(auth, initialAuthToken);
+                        } else {
+                            // Usar un ID de usuario anónimo temporal si no hay token
+                            await signInAnonymously(auth); 
+                        }
+                    } catch (error) {
+                        console.error("Error al iniciar sesión:", error);
+                    }
+                }
+            });
+
+        } else {
+            console.error("Configuración de Firebase no disponible.");
+        }
+
+        // 1.2. Función auxiliar para obtener la ruta de la colección del carrito
+        function getCartCollectionRef(uid) {
+            // Regla de seguridad: /artifacts/{appId}/users/{userId}/carrito
+            const cartPath = `/artifacts/${appId}/users/${uid}/carrito`;
+            return collection(db, cartPath);
+        }
+
+        // 1.3. Función auxiliar para obtener la ruta de la colección de compras
+        function getOrdersCollectionRef(uid) {
+            // Regla de seguridad: /artifacts/{appId}/users/{userId}/compras
+            const ordersPath = `/artifacts/${appId}/users/${uid}/compras`;
+            return collection(db, ordersPath);
+        }
+
+        // =================================================================
+        // 2. LÓGICA DEL CARRITO (CARGA EN TIEMPO REAL)
+        // =================================================================
+
+        let currentCartItems = [];
+
+        /**
+         * Escucha los cambios en la colección del carrito del usuario.
+         * @param {string} uid ID del usuario.
+         */
+        function listenToCartChanges(uid) {
+            const cartRef = getCartCollectionRef(uid);
+            
+            // Usamos onSnapshot para obtener actualizaciones en tiempo real
+            onSnapshot(cartRef, (snapshot) => {
+                // No necesitamos el chequeo de isAuthReady aquí, ya que listenToCartChanges solo
+                // se llama cuando onAuthStateChanged lo confirma.
+                
+                currentCartItems = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+
+                // Ordenar los items por nombre (mejor práctica en JS, no en Firestore)
+                currentCartItems.sort((a, b) => (a.nombre > b.nombre) ? 1 : -1);
+
+                renderCart(currentCartItems);
+            }, (error) => {
+                console.error("Error al escuchar cambios en el carrito:", error);
+            });
+        }
+
+        /**
+         * Calcula el resumen de la compra.
+         * @param {Array<Object>} items Lista de items del carrito.
+         * @returns {Object} Resumen con subtotal, impuestos y total.
+         */
+        function calculateSummary(items) {
+            const TAX_RATE = 0.19; // 19% de impuestos
+
+            const subtotal = items.reduce((sum, item) => {
+                // Asegurarse de que el precio y la cantidad son números
+                const price = parseFloat(item.precio) || 0;
+                const quantity = parseInt(item.cantidad) || 0;
+                return sum + (price * quantity);
+            }, 0);
+
+            const taxes = subtotal * TAX_RATE;
+            const total = subtotal + taxes;
+
+            return {
+                subtotal: subtotal.toFixed(2),
+                taxes: taxes.toFixed(2),
+                total: total.toFixed(2)
+            };
+        }
+
+
+        // =================================================================
+        // 3. RENDERIZADO DE UI
+        // =================================================================
+
+        /**
+         * Renderiza la lista de productos y el resumen en la UI.
+         * @param {Array<Object>} items Lista de items del carrito.
+         */
+        function renderCart(items) {
+            const listaEl = document.getElementById('carrito-lista');
+            const subtotalEl = document.getElementById('subtotal');
+            const impuestosEl = document.getElementById('impuestos');
+            const totalEl = document.getElementById('total');
+
+            if (!listaEl || !subtotalEl || !impuestosEl || !totalEl) {
+                console.error("Elementos del DOM no encontrados para el carrito.");
+                return;
+            }
+
+            listaEl.innerHTML = ''; // Limpiar lista
+
+            if (items.length === 0) {
+                listaEl.innerHTML = `
+                    <div class="text-center p-8 text-gray-500 bg-gray-50 rounded-lg">
+                        Tu carrito está vacío. ¡Agrega algunos productos!
+                    </div>
+                `;
+                // Si no hay items, los totales son cero
+                subtotalEl.textContent = '$0.00';
+                impuestosEl.textContent = '$0.00';
+                totalEl.textContent = '$0.00';
+                return;
+            }
+
+            // Generar HTML para cada item
+            items.forEach(item => {
+                const itemTotal = (parseFloat(item.precio) * parseInt(item.cantidad)).toFixed(2);
+                
+                // Determinar la imagen principal
+                const imageUrl = item.imagenPrincipal || item.imagen || `https://placehold.co/70x70/D45510/ffffff?text=${item.nombre.charAt(0)}`;
+
+                listaEl.innerHTML += `
+                    <div class="carrito-item-page" data-doc-id="${item.id}">
+                        <div class="carrito-item-info-page">
+                            <img src="${imageUrl}" 
+                                 onerror="this.onerror=null; this.src='https://placehold.co/70x70/D45510/ffffff?text=Prod'" 
+                                 alt="${item.nombre}">
+                            <div>
+                                <span class="nombre font-medium text-gray-800">${item.nombre}</span>
+                                <div style="font-size:0.9rem; color:#666; margin-top:0.2rem;">
+                                    Cantidad: 
+                                    <input type="number" 
+                                            min="1" 
+                                            value="${item.cantidad}" 
+                                            data-item-id="${item.id}"
+                                            class="cantidad-input px-2 py-1 border border-gray-300 rounded-md text-center focus:border-orange-500" 
+                                            style="width: 60px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <span class="carrito-item-precio">$${itemTotal}</span>
+                            <button class="remove-btn-page" data-item-id="${item.id}">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-gray-400 hover:text-red-500">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 6.551a1.2 1.2 0 0 1-.716.44L4.9 8.23a1.2 1.2 0 0 1-.716-.44L3.217 4.785A1.2 1.2 0 0 1 3.56 3.73l.66-1.55c.162-.38.544-.648.966-.648h14.82a1.2 1.2 0 0 1 .966.648l.66 1.55c.09.21.135.45.135.69v.117Z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Calcular y actualizar resumen
+            const summary = calculateSummary(items);
+            subtotalEl.textContent = `$${summary.subtotal}`;
+            impuestosEl.textContent = `$${summary.taxes}`;
+            totalEl.textContent = `$${summary.total}`;
+        }
+
+        // =================================================================
+        // 4. MANEJO DE ACCIONES DEL CARRITO (ACTUALIZAR / ELIMINAR)
+        // =================================================================
+
+        /**
+         * Elimina un item del carrito en Firestore.
+         * @param {string} docId ID del documento a eliminar.
+         */
+        async function removeItem(docId) {
+            if (!userId) {
+                showTemporaryMessage("Error: Sesión no iniciada.", 'error');
+                return;
+            }
+            try {
+                const itemRef = doc(getCartCollectionRef(userId), docId);
+                await deleteDoc(itemRef);
+                console.log("Item eliminado:", docId);
+                showTemporaryMessage("Item eliminado del carrito.", 'info');
+            } catch (error) {
+                console.error("Error al eliminar el item:", error);
+                showTemporaryMessage("Error al eliminar el item.", 'error');
+            }
+        }
+
+        /**
+         * Actualiza la cantidad de un item en el carrito en Firestore.
+         * @param {string} docId ID del documento a actualizar.
+         * @param {number} newQuantity Nueva cantidad.
+         */
+        async function updateQuantity(docId, newQuantity) {
+            if (!userId || newQuantity < 1) return;
+            
+            try {
+                const itemRef = doc(getCartCollectionRef(userId), docId);
+                await updateDoc(itemRef, {
+                    cantidad: newQuantity
+                });
+                console.log(`Cantidad actualizada para ${docId} a ${newQuantity}`);
+            } catch (error) {
+                console.error("Error al actualizar cantidad:", error);
+            }
+        }
+
+        // 4.1. Event listener delegado para los cambios en la lista
+        document.addEventListener('input', (e) => {
+            if (e.target.classList.contains('cantidad-input')) {
+                const itemId = e.target.dataset.itemId;
+                const newQuantity = parseInt(e.target.value);
+                
+                if (newQuantity < 1) {
+                    e.target.value = 1; // Previene valores negativos o cero en el input
+                    return;
+                }
+
+                if (newQuantity >= 1) {
+                    // Se usa un pequeño timeout para no escribir en la base de datos con cada tecla
+                    clearTimeout(e.target.timeout);
+                    e.target.timeout = setTimeout(() => {
+                        updateQuantity(itemId, newQuantity);
+                    }, 500);
+                }
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.remove-btn-page')) {
+                const button = e.target.closest('.remove-btn-page');
+                const itemId = button.dataset.itemId;
+                removeItem(itemId);
+            }
+        });
+
+        // =================================================================
+        // 5. LÓGICA DE CHECKOUT (PROCESO DE PAGO)
+        // =================================================================
+
+        /**
+         * Simula el proceso de compra.
+         * @param {Event} e Evento de submit del formulario.
+         */
+        async function handleCheckout(e) {
+            e.preventDefault();
+
+            if (!isAuthReady || currentCartItems.length === 0) {
+                console.error("Error: No se puede procesar el checkout. Carrito vacío o autenticación incompleta.");
+                showTemporaryMessage("El carrito está vacío. No se puede procesar la compra.", 'error');
+                return;
+            }
+
+            const form = e.target;
+            const summary = calculateSummary(currentCartItems);
+
+            // Recolectar datos del formulario
+            const orderData = {
+                nombre: form.nombre.value,
+                correo: form.correo.value,
+                direccion: form.direccion.value,
+                ciudad: form.ciudad.value,
+                telefono: form.telefono.value,
+                // (Nota: la info de tarjeta no debe guardarse en BBDD real, aquí la simulamos como un placeholder)
+                pago_simulado: `Tarjeta terminada en ${form.tarjeta.value.slice(-4)}`,
+                fecha_pedido: new Date(),
+                items: currentCartItems.map(item => ({
+                    id: item.id,
+                    nombre: item.nombre,
+                    cantidad: item.cantidad,
+                    precio_unitario: item.precio,
+                    // Incluir imagen para referencia
+                    imagen: item.imagenPrincipal || item.imagen || `https://placehold.co/70x70/D45510/ffffff?text=${item.nombre.charAt(0)}`
+                })),
+                resumen: summary,
+                estado: 'Procesado'
+            };
+            
+            // Deshabilitar botón de pago
+            const checkoutBtn = document.getElementById('checkout-btn');
+            checkoutBtn.disabled = true;
+            checkoutBtn.textContent = 'Procesando...';
+
+            try {
+                // 1. Añadir el pedido a la colección 'compras' del usuario
+                await addDoc(getOrdersCollectionRef(userId), orderData);
+                console.log("Pedido guardado en historial de compras.");
+
+                // 2. Eliminar todos los items del carrito
+                const cartRef = getCartCollectionRef(userId);
+                const q = query(cartRef);
+                const snapshot = await getDocs(q);
+
+                const deletePromises = snapshot.docs.map(docSnapshot => {
+                    return deleteDoc(doc(cartRef, docSnapshot.id));
+                });
+
+                await Promise.all(deletePromises);
+                console.log("Carrito vaciado exitosamente.");
+
+                // 3. Mostrar mensaje de éxito
+                showTemporaryMessage("¡Compra finalizada con éxito! Gracias por tu pedido.", 'success');
+
+                // 4. Limpiar formulario
+                form.reset();
+                
+            } catch (error) {
+                console.error("Error durante el checkout:", error);
+                showTemporaryMessage("Hubo un error al procesar tu compra. Inténtalo de nuevo.", 'error');
+            } finally {
+                // Habilitar botón de pago
+                checkoutBtn.disabled = false;
+                checkoutBtn.textContent = 'Pagar Ahora y Vaciar Carrito';
+            }
+        }
+
+        // 5.1. Listener para el formulario de checkout
+        document.addEventListener('DOMContentLoaded', () => {
+            const checkoutForm = document.getElementById('checkoutForm');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', handleCheckout);
+            }
+        });
+        function showTemporaryMessage(message, type = 'info') {
+            const existingMsg = document.getElementById('temp-message');
+            if (existingMsg) existingMsg.remove();
+            
+            const msgEl = document.createElement('div');
+            msgEl.id = 'temp-message';
+            msgEl.textContent = message;
+            
+            // Estilos basados en tu CSS para una apariencia limpia
+            let bgColor = '#4CAF50'; // Success
+            if (type === 'error') bgColor = '#D45510'; // Error (usando color principal)
+            if (type === 'info') bgColor = '#2196F3'; // Info
+            
+            msgEl.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background-color: ${bgColor};
+                color: white;
+                padding: 15px 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                font-size: 1.1rem;
+                font-weight: 600;
+                z-index: 10000;
+                opacity: 0;
+                transition: opacity 0.5s, bottom 0.5s;
+            `;
+
+            document.body.appendChild(msgEl);
+            
+            // Animación de entrada
+            setTimeout(() => {
+                msgEl.style.opacity = '1';
+                msgEl.style.bottom = '30px';
+            }, 10);
+
+            // Animación de salida y remoción
+            setTimeout(() => {
+                msgEl.style.opacity = '0';
+                msgEl.style.bottom = '10px';
+                setTimeout(() => msgEl.remove(), 500);
+            }, 4000);
+        }
+
+        // =================================================================
+        // 7. FORMATOS DE ENTRADA (Mascara para tarjeta/expiración)
+        // =================================================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const tarjetaInput = document.getElementById('tarjeta');
+            const expiracionInput = document.getElementById('expiracion');
+            
+            if (tarjetaInput) {
+                tarjetaInput.addEventListener('input', (e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    // Formato XXXX XXXX XXXX XXXX
+                    if (value.length > 0) {
+                        value = value.match(/.{1,4}/g).join(' ');
+                    }
+                    e.target.value = value.slice(0, 19); // 16 digitos + 3 espacios = 19
+                });
+            }
+
+            if (expiracionInput) {
+                expiracionInput.addEventListener('input', (e) => {
+                    let value = e.target.value.replace(/\D/g, '');
+                    // Formato MM/AA
+                    if (value.length > 2) {
+                        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+                    }
+                    e.target.value = value.slice(0, 5);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

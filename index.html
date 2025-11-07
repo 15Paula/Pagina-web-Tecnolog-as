@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Inicio - Tienda</title>
   <link rel="stylesheet" href="style.css"/>
+  <script type="module" src="./firebase.js"></script>
   <style>
     /* ---------- CARRUSEL DESTACADOS (estilos propios) ---------- */
     .section-title {
@@ -19,7 +20,6 @@
       font-weight: 600;
       font-size: 0.95rem;
       color: #555;
-      font-weight: 600;
       opacity: 0.9;
     }
 
@@ -279,6 +279,7 @@
   </style>
 </head>
 <body>
+  <!-- HEADER dinámico -->
   <div id="header-container"></div>
 
   <main>
@@ -343,8 +344,9 @@
 
   <div id="footer-container"></div>
 
-  <!-- scripts -->
+  <!-- Scripts del carrusel y otros -->
   <script src="script.js"></script>
+
   <script>
     // Carrusel destacado - versión mejorada (flechas discretas, overlay en móvil, swipe)
     (function(){
@@ -376,15 +378,12 @@
         }
       }
 
-      <!-- dentro del script de index.html: reemplaza renderSlide por esto -->
       function renderSlide(index) {
         const prod = slides[index];
-        // build slide
         carouselEl.innerHTML = `
           <article class="slide" data-index="${index}">
             <div class="slide-media" aria-hidden="false">
               <img class="slide-img-click" src="${prod.imagen || 'placeholder.jpg'}" alt="${prod.nombre}">
-              <!-- overlay: visible en movil -->
               <div class="media-overlay" aria-hidden="false">
                 <div class="overlay-title">${prod.nombre}</div>
                 <div class="overlay-actions">
@@ -393,11 +392,9 @@
                 </div>
               </div>
             </div>
-
             <div class="slide-content" aria-hidden="false">
               <h3 class="slide-title">${prod.nombre}</h3>
               <p class="slide-desc">${prod.descripcion || ''}</p>
-
               <div class="slide-actions" aria-hidden="false">
                 <button class="add-btn" data-nombre="${prod.nombre}" data-precio="${prod.precio || 0}">🛒 Añadir al carrito</button>
                 <div class="precio">$${(prod.precio || 0).toLocaleString()}</div>
@@ -406,7 +403,6 @@
           </article>
         `;
 
-        // hacer la imagen clicable: redirige a la página de la categoría con expand
         const img = carouselEl.querySelector('.slide-img-click');
         if (img) {
           img.style.cursor = 'pointer';
@@ -419,7 +415,6 @@
           });
         }
 
-        // actualizar dots active
         const dotButtons = dotsEl.querySelectorAll('button');
         dotButtons.forEach((b,i)=> b.classList.toggle('active', i===index));
       }
@@ -451,78 +446,72 @@
         nextBtn.addEventListener('click', next);
         prevBtn.addEventListener('click', prev);
 
-        // teclado
         window.addEventListener('keydown', (e) => {
           if (e.key === 'ArrowRight') next();
           if (e.key === 'ArrowLeft') prev();
         });
 
-        // delegación para botón añadir (tanto overlay como add-btn)
         carouselEl.addEventListener('click', (e) => {
           const overlayBtn = e.target.closest('.overlay-add');
           const addBtn = e.target.closest('.add-btn');
           const btn = overlayBtn || addBtn;
-          if (!btn) return;
-          e.stopPropagation();
-          const nombre = btn.dataset.nombre;
-          const precio = Number(btn.dataset.precio) || 0;
-          const img = carouselEl.querySelector('.slide-media img')?.getAttribute('src') || '';
-          if (typeof agregarAlCarrito === 'function') {
-            agregarAlCarrito({ nombre, precio, imagen: img });
-          } else {
-            console.warn('agregarAlCarrito no definida.');
+          if (btn) {
+            const nombre = btn.dataset.nombre;
+            const precio = parseFloat(btn.dataset.precio || 0);
+            alert(`Agregando al carrito: ${nombre} por $${precio.toLocaleString()}`);
+            // Aquí puedes llamar función para agregar al carrito real
           }
         });
 
-        // TOUCH: swipe con touchmove para mejor sensibilidad
         let touchStartX = null;
-        let touchCurrentX = null;
-        let isTouching = false;
-
+        let touchEndX = null;
         carouselEl.addEventListener('touchstart', (e) => {
-          if (!e.changedTouches || !e.changedTouches[0]) return;
           touchStartX = e.changedTouches[0].screenX;
-          touchCurrentX = touchStartX;
-          isTouching = true;
-        }, {passive: true});
-
-        carouselEl.addEventListener('touchmove', (e) => {
-          if (!isTouching || !e.changedTouches || !e.changedTouches[0]) return;
-          touchCurrentX = e.changedTouches[0].screenX;
-        }, {passive: true});
-
+        });
         carouselEl.addEventListener('touchend', (e) => {
-          if (!isTouching) return;
-          const dx = (touchCurrentX || touchStartX) - touchStartX;
-          const threshold = 40; // px mínimo para considerar swipe
-          if (Math.abs(dx) > threshold) {
-            if (dx < 0) next(); else prev();
-          }
-          touchStartX = null;
-          touchCurrentX = null;
-          isTouching = false;
-        });
-
-        // Also support mouse drag (optional lightweight)
-        let mouseDown = false, mouseStartX = 0;
-        carouselEl.addEventListener('mousedown', (e) => {
-          mouseDown = true;
-          mouseStartX = e.screenX;
-        });
-        window.addEventListener('mouseup', (e) => {
-          if (!mouseDown) return;
-          const dx = e.screenX - mouseStartX;
-          const threshold = 50;
-          if (Math.abs(dx) > threshold) {
-            if (dx < 0) next(); else prev();
-          }
-          mouseDown = false;
+          touchEndX = e.changedTouches[0].screenX;
+          if (touchStartX - touchEndX > 40) next();
+          else if (touchEndX - touchStartX > 40) prev();
         });
       }
 
-      // iniciar
       loadSlides();
     })();
+  </script>
+
+  <!-- Script para insertar header y inicializar autenticación -->
+  <script type="module">
+    import { initAuthUI } from './Inicisesion.js';
+
+    const headerHTML = `
+      <header>
+        <nav class="main-nav">
+          <div class="nav-left">
+            <a href="index.html" class="logo">TiendaFestiva</a>
+          </div>
+          <div class="nav-right">
+            <button id="loginBtn" style="display:flex;">Iniciar Sesión</button>
+
+            <div id="userProfile" style="display:none; cursor:pointer; align-items:center;">
+              <span id="userName" style="margin-right:10px;"></span>
+              <div id="userMenu" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; padding:5px; border-radius:4px;">
+                <button id="logoutBtn">Cerrar Sesión</button>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
+    `;
+
+    document.getElementById('header-container').innerHTML = headerHTML;
+
+    initAuthUI({
+      loginBtnSelector: '#loginBtn',
+      userProfileSelector: '#userProfile',
+      userNameSelector: '#userName',
+      userMenuSelector: '#userMenu',
+      logoutBtnSelector: '#logoutBtn'
+    });
   </script>
 </body>
 </html>

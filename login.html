@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Iniciar Sesión</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="auth-body">
+
+  <div class="auth-container">
+    <h1>Iniciar Sesión</h1>
+
+    <form class="auth-form" id="loginForm">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" required />
+
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" required />
+
+      <button type="submit" class="auth-btn">Entrar</button>
+    </form>
+
+    <p id="error-message" style="color:red; margin-top:10px; display:none;"></p>
+
+    <p class="auth-switch">
+      ¿No tienes cuenta?
+      <a href="registro.html">Crear una cuenta</a>
+    </p>
+  </div>
+
+  <script type="module">
+    import { loginUser } from "./firebase.js";
+
+    const form = document.getElementById("loginForm");
+    const errorMessage = document.getElementById("error-message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      errorMessage.style.display = "none";
+      errorMessage.textContent = "";
+
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        await loginUser(email, password);
+        window.location.href = "index.html";  // Redirigir a la página principal
+      } catch (error) {
+        if (error.code === "auth/user-not-found" || error.code === "auth/wrong-password") {
+          errorMessage.textContent = "Correo o contraseña incorrectos.";
+        } else {
+          errorMessage.textContent = "Error al iniciar sesión. Por favor intenta nuevamente.";
+        }
+        errorMessage.style.display = "block";
+      }
+    });
+  </script>
+
+</body>
+</html>
+
+
