@@ -42,8 +42,11 @@
     </p>
   </div>
 
+  <!-- Incluir SweetAlert2 desde CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <script type="module">
-    import { auth, db, registerUser, addDoc, collection } from "./firebase.js";
+    import { auth, db, registerUser, setDoc, doc } from "./firebase.js";
 
     const form = document.getElementById("registerForm");
     const errorDiv = document.getElementById("error-message");
@@ -76,7 +79,7 @@
         const user = userCredential.user;
 
         // Guardar datos adicionales en Firestore
-        await addDoc(collection(db, "usuarios"), {
+        await setDoc(doc(db, "usuarios", user.uid), {
           uid: user.uid,
           nombre,
           email,
@@ -85,8 +88,15 @@
           creadoEn: new Date()
         });
 
-        alert("✅ Cuenta creada con éxito. Ahora puedes iniciar sesión.");
-        window.location.href = "login.html";
+        // Mostrar mensaje lindo con SweetAlert2
+        Swal.fire({
+          icon: 'success',
+          title: 'Cuenta creada',
+          text: 'Tu cuenta ha sido creada con éxito. Ahora puedes iniciar sesión.',
+          confirmButtonText: 'Aceptar'
+        }).then(() => {
+          window.location.href = "login.html";
+        });
 
       } catch (error) {
         if (error.code === "auth/email-already-in-use") {
@@ -100,3 +110,4 @@
 
 </body>
 </html>
+

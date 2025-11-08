@@ -66,7 +66,7 @@ export function initAuthUI({
   // Cerrar sesión
   logoutBtn.addEventListener('click', async () => {
     await logoutUser();
-    window.location.reload();
+   
   });
 }
 

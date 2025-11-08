@@ -1,6 +1,4 @@
 // firebase.js
-
-// --- Importar Firebase Core, Auth y Firestore ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import {
   getAuth,
@@ -16,10 +14,11 @@ import {
   addDoc,
   query,
   where,
-  getDocs
+  getDocs,
+  doc,
+  setDoc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-// --- Configuración Firebase ---
 const firebaseConfig = {
   apiKey: "AIzaSyAQWzV5B7x8pChiuSggrLFGj753i0kySCU",
   authDomain: "login-93039.firebaseapp.com",
@@ -29,37 +28,36 @@ const firebaseConfig = {
   appId: "1:428055807133:web:22dee2f9c08b15bce80074"
 };
 
-// --- Inicializar Firebase ---
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// --- Funciones personalizadas de Auth ---
-
 export const registerUser = (email, password) => {
   return firebaseCreateUser(auth, email, password);
-}
+};
 
 export const loginUser = (email, password) => {
   return firebaseSignIn(auth, email, password);
-}
+};
 
 export const onAuthState = (callback) => {
   return firebaseOnAuthStateChanged(auth, callback);
-}
+};
 
 export const logoutUser = () => {
   return signOut(auth);
-}
+};
 
-// --- Firestore funciones ---
 export {
   collection,
   addDoc,
   query,
   where,
-  getDocs
+  getDocs,
+  doc,
+  setDoc
 };
+
 
 
 
