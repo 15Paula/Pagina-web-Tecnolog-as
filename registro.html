@@ -46,68 +46,51 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script type="module">
-    import { auth, db, registerUser, setDoc, doc } from "./firebase.js";
+  import { registerUser } from "./firebase.js";
 
-    const form = document.getElementById("registerForm");
-    const errorDiv = document.getElementById("error-message");
+  const form = document.getElementById("registerForm");
+  const errorDiv = document.getElementById("error-message");
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-      errorDiv.textContent = ""; // Limpiar mensaje previo
+    errorDiv.textContent = ""; 
 
-      const nombre = document.getElementById("nombre").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const telefono = document.getElementById("telefono").value.trim();
-      const direccion = document.getElementById("direccion").value.trim();
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirm-password").value;
+    const nombre = document.getElementById("nombre").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const telefono = document.getElementById("telefono").value.trim();
+    const direccion = document.getElementById("direccion").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
 
-      if (password !== confirmPassword) {
-        errorDiv.textContent = "❌ Las contraseñas no coinciden.";
-        return;
+    if (password !== confirmPassword) {
+      errorDiv.textContent = "❌ Las contraseñas no coinciden.";
+      return;
+    }
+
+    if (password.length < 6) {
+      errorDiv.textContent = "❌ La contraseña debe tener al menos 6 caracteres.";
+      return;
+    }
+
+    try {
+      await registerUser(email, password, nombre, telefono, direccion);
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Cuenta creada',
+        text: 'Tu cuenta ha sido creada con éxito. Ahora puedes iniciar sesión.',
+        confirmButtonText: 'Aceptar'
+      }).then(() => {
+        window.location.href = "login.html";
+      });
+
+    } catch (error) {
+      if (error.code === "auth/email-already-in-use") {
+        errorDiv.textContent = "❌ Esta cuenta ya existe. Por favor, inicia sesión o usa otro correo.";
+      } else {
+        errorDiv.textContent = "❌ Error: " + error.message;
       }
-
-      if (password.length < 6) {
-        errorDiv.textContent = "❌ La contraseña debe tener al menos 6 caracteres.";
-        return;
-      }
-
-      try {
-        // Crear usuario en Firebase Auth
-        const userCredential = await registerUser(email, password);
-        const user = userCredential.user;
-
-        // Guardar datos adicionales en Firestore
-        await setDoc(doc(db, "usuarios", user.uid), {
-          uid: user.uid,
-          nombre,
-          email,
-          telefono,
-          direccion,
-          creadoEn: new Date()
-        });
-
-        // Mostrar mensaje lindo con SweetAlert2
-        Swal.fire({
-          icon: 'success',
-          title: 'Cuenta creada',
-          text: 'Tu cuenta ha sido creada con éxito. Ahora puedes iniciar sesión.',
-          confirmButtonText: 'Aceptar'
-        }).then(() => {
-          window.location.href = "login.html";
-        });
-
-      } catch (error) {
-        if (error.code === "auth/email-already-in-use") {
-          errorDiv.textContent = "❌ Esta cuenta ya existe. Por favor, inicia sesión o usa otro correo.";
-        } else {
-          errorDiv.textContent = "❌ Error: " + error.message;
-        }
-      }
-    });
-  </script>
-
-</body>
-</html>
-
+    }
+  });
+</script>

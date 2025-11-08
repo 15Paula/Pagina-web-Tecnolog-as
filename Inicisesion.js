@@ -1,5 +1,11 @@
 // Inicisesion.js
-import { onAuthState, logoutUser, db, collection, query, where, getDocs } from './firebase.js';
+import { 
+  onAuthState, 
+  logoutUser, 
+  db, 
+  doc,
+  getDoc
+} from './firebase.js';
 
 export function initAuthUI({
   loginBtnSelector,
@@ -19,7 +25,7 @@ export function initAuthUI({
     return;
   }
 
-  // Mostrar/ocultar menú desplegable
+  // Mostrar/ocultar menú
   userProfile.addEventListener('click', () => {
     userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
   });
@@ -30,7 +36,7 @@ export function initAuthUI({
     }
   });
 
-  // Detectar estado de sesión
+  // Detectar inicio de sesión
   onAuthState(async (user) => {
     if (user) {
       loginBtn.style.display = 'none';
@@ -38,24 +44,24 @@ export function initAuthUI({
       userMenu.style.display = 'none';
 
       try {
-        const usuariosRef = collection(db, 'usuarios');
-        const q = query(usuariosRef, where('uid', '==', user.uid));
-        const querySnapshot = await getDocs(q);
+        // ✅ Leer el documento correcto por UID
+        const docRef = doc(db, "usuarios", user.uid);
+        const docSnap = await getDoc(docRef);
 
-        let nombreCompleto = '';
-        if (!querySnapshot.empty) {
-          nombreCompleto = querySnapshot.docs[0].data().nombre || user.email;
-        } else {
-          nombreCompleto = user.email;
+        let nombreCompleto = user.email;
+
+        if (docSnap.exists()) {
+          nombreCompleto = docSnap.data().nombre || user.email;
         }
 
-        const primerNombre = nombreCompleto.split(' ')[0];
+        const primerNombre = nombreCompleto.split(" ")[0];
         userNameSpan.textContent = primerNombre;
 
       } catch (error) {
         console.error('Error al obtener usuario:', error);
         userNameSpan.textContent = user.email.split('@')[0];
       }
+
     } else {
       loginBtn.style.display = 'flex';
       userProfile.style.display = 'none';
@@ -66,8 +72,6 @@ export function initAuthUI({
   // Cerrar sesión
   logoutBtn.addEventListener('click', async () => {
     await logoutUser();
-   
+    window.location.reload();
   });
 }
-
-

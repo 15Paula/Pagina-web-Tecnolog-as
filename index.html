@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Inicio - Tienda</title>
   <link rel="stylesheet" href="style.css"/>
-  <script type="module" src="./firebase.js"></script>
   <style>
     /* ---------- CARRUSEL DESTACADOS (estilos propios) ---------- */
     .section-title {
@@ -279,8 +278,76 @@
   </style>
 </head>
 <body>
-  <!-- HEADER dinámico -->
-  <div id="header-container"></div>
+<div id="header-container"></div>
+
+<script type="module">
+  import { onAuthState, logoutUser, db, collection, query, where, getDocs } from "./firebase.js";
+
+  fetch("header.html")
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById("header-container").innerHTML = html;
+
+      // ✅ Después de insertar el header, activamos su lógica
+      iniciarHeaderConFirebase();
+    });
+
+  function iniciarHeaderConFirebase() {
+    const loginBtn = document.getElementById('loginBtn');
+    const userProfile = document.getElementById('userProfile');
+    const userNameSpan = document.getElementById('userName');
+    const userMenu = document.getElementById('userMenu');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    userProfile.addEventListener('click', () => {
+      userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!userProfile.contains(e.target)) {
+        userMenu.style.display = 'none';
+      }
+    });
+
+    onAuthState(async (user) => {
+  if (user) {
+
+    console.log("✅ Usuario logueado con UID =", user.uid);
+
+    loginBtn.style.display = 'none';
+    userProfile.style.display = 'flex';
+    userMenu.style.display = 'none';
+
+    try {
+      const usuariosRef = collection(db, 'usuarios');
+      const q = query(usuariosRef, where('uid', '==', user.uid));
+      const querySnapshot = await getDocs(q);
+
+      let nombreCompleto = user.email;
+
+      if (!querySnapshot.empty) {
+        nombreCompleto = querySnapshot.docs[0].data().nombre || user.email;
+      }
+
+      const primerNombre = nombreCompleto.split(" ")[0];
+      userNameSpan.textContent = primerNombre;
+
+    } catch (error) {
+      console.error('Error al obtener usuario:', error);
+      userNameSpan.textContent = user.email.split('@')[0];
+    }
+  } else {
+    loginBtn.style.display = 'flex';
+    userProfile.style.display = 'none';
+    userMenu.style.display = 'none';
+  }
+});
+    logoutBtn.addEventListener('click', async () => {
+      await logoutUser();
+      window.location.reload();
+    });
+  }
+</script>
 
   <main>
     <!-- TÍTULO DE LA ZONA DE PRODUCTOS -->
@@ -477,41 +544,6 @@
 
       loadSlides();
     })();
-  </script>
-
-  <!-- Script para insertar header y inicializar autenticación -->
-  <script type="module">
-    import { initAuthUI } from './Inicisesion.js';
-
-    const headerHTML = `
-      <header>
-        <nav class="main-nav">
-          <div class="nav-left">
-            <a href="index.html" class="logo">TiendaFestiva</a>
-          </div>
-          <div class="nav-right">
-            <button id="loginBtn" style="display:flex;">Iniciar Sesión</button>
-
-            <div id="userProfile" style="display:none; cursor:pointer; align-items:center;">
-              <span id="userName" style="margin-right:10px;"></span>
-              <div id="userMenu" style="display:none; position:absolute; background:#fff; border:1px solid #ccc; padding:5px; border-radius:4px;">
-                <button id="logoutBtn">Cerrar Sesión</button>
-              </div>
-            </div>
-          </div>
-        </nav>
-      </header>
-    `;
-
-    document.getElementById('header-container').innerHTML = headerHTML;
-
-    initAuthUI({
-      loginBtnSelector: '#loginBtn',
-      userProfileSelector: '#userProfile',
-      userNameSelector: '#userName',
-      userMenuSelector: '#userMenu',
-      logoutBtnSelector: '#logoutBtn'
-    });
   </script>
 </body>
 </html>
