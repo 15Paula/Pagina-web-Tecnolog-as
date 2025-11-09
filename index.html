@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <link rel="icon" href="data:,">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Inicio - Tienda</title>
   <link rel="stylesheet" href="style.css"/>
@@ -279,76 +280,6 @@
 </head>
 <body>
 <div id="header-container"></div>
-
-<script type="module">
-  import { onAuthState, logoutUser, db, collection, query, where, getDocs } from "./firebase.js";
-
-  fetch("header.html")
-    .then(res => res.text())
-    .then(html => {
-      document.getElementById("header-container").innerHTML = html;
-
-      // ✅ Después de insertar el header, activamos su lógica
-      iniciarHeaderConFirebase();
-    });
-
-  function iniciarHeaderConFirebase() {
-    const loginBtn = document.getElementById('loginBtn');
-    const userProfile = document.getElementById('userProfile');
-    const userNameSpan = document.getElementById('userName');
-    const userMenu = document.getElementById('userMenu');
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    userProfile.addEventListener('click', () => {
-      userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
-    });
-
-    document.addEventListener('click', (e) => {
-      if (!userProfile.contains(e.target)) {
-        userMenu.style.display = 'none';
-      }
-    });
-
-    onAuthState(async (user) => {
-  if (user) {
-
-    console.log("✅ Usuario logueado con UID =", user.uid);
-
-    loginBtn.style.display = 'none';
-    userProfile.style.display = 'flex';
-    userMenu.style.display = 'none';
-
-    try {
-      const usuariosRef = collection(db, 'usuarios');
-      const q = query(usuariosRef, where('uid', '==', user.uid));
-      const querySnapshot = await getDocs(q);
-
-      let nombreCompleto = user.email;
-
-      if (!querySnapshot.empty) {
-        nombreCompleto = querySnapshot.docs[0].data().nombre || user.email;
-      }
-
-      const primerNombre = nombreCompleto.split(" ")[0];
-      userNameSpan.textContent = primerNombre;
-
-    } catch (error) {
-      console.error('Error al obtener usuario:', error);
-      userNameSpan.textContent = user.email.split('@')[0];
-    }
-  } else {
-    loginBtn.style.display = 'flex';
-    userProfile.style.display = 'none';
-    userMenu.style.display = 'none';
-  }
-});
-    logoutBtn.addEventListener('click', async () => {
-      await logoutUser();
-      window.location.reload();
-    });
-  }
-</script>
-
   <main>
     <!-- TÍTULO DE LA ZONA DE PRODUCTOS -->
     <h2 class="section-title">PRODUCTOS DESTACADOS <span class="subline">Lo mejor para tus celebraciones</span></h2>
@@ -545,5 +476,12 @@
       loadSlides();
     })();
   </script>
+  <script type="module">
+  import { iniciarHeaderConFirebase } from './header.js';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    iniciarHeaderConFirebase();
+  });
+</script>
 </body>
 </html>

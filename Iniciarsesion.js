@@ -1,11 +1,4 @@
-// Inicisesion.js
-import { 
-  onAuthState, 
-  logoutUser, 
-  db, 
-  doc,
-  getDoc
-} from './firebase.js';
+import { onAuthState, logoutUser, db, doc, getDoc } from './firebase.js';
 
 export function initAuthUI({
   loginBtnSelector,
@@ -25,7 +18,10 @@ export function initAuthUI({
     return;
   }
 
-  // Mostrar/ocultar menú
+  function getFirstName(fullName) {
+    return fullName.split(' ')[0];
+  }
+
   userProfile.addEventListener('click', () => {
     userMenu.style.display = userMenu.style.display === 'block' ? 'none' : 'block';
   });
@@ -36,17 +32,25 @@ export function initAuthUI({
     }
   });
 
-  // Detectar inicio de sesión
   onAuthState(async (user) => {
+    console.log("✅ Cambio de sesión detectado. Usuario actual:", user);
+
     if (user) {
       loginBtn.style.display = 'none';
       userProfile.style.display = 'flex';
       userMenu.style.display = 'none';
 
+      console.log("➡️ UID del usuario:", user.uid);
+      console.log("➡️ Email del usuario:", user.email);
+
       try {
-        // ✅ Leer el documento correcto por UID
         const docRef = doc(db, "usuarios", user.uid);
         const docSnap = await getDoc(docRef);
+
+        console.log("📄 Documento Firestore encontrado:", docSnap.exists());
+        if (docSnap.exists()) {
+          console.log("📄 Datos del Firestore:", docSnap.data());
+        }
 
         let nombreCompleto = user.email;
 
@@ -54,24 +58,19 @@ export function initAuthUI({
           nombreCompleto = docSnap.data().nombre || user.email;
         }
 
-        const primerNombre = nombreCompleto.split(" ")[0];
-        userNameSpan.textContent = primerNombre;
+        console.log("✅ Nombre final mostrado:", nombreCompleto);
+
+        userNameSpan.textContent = getFirstName(nombreCompleto);
 
       } catch (error) {
-        console.error('Error al obtener usuario:', error);
+        console.error('❌ Error al obtener usuario:', error);
         userNameSpan.textContent = user.email.split('@')[0];
       }
-
     } else {
       loginBtn.style.display = 'flex';
       userProfile.style.display = 'none';
       userMenu.style.display = 'none';
     }
   });
-
-  // Cerrar sesión
-  logoutBtn.addEventListener('click', async () => {
-    await logoutUser();
-    window.location.reload();
-  });
 }
+

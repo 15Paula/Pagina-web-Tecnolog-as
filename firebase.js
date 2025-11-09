@@ -13,6 +13,10 @@ import {
   doc,
   setDoc,
   getDoc,
+  addDoc,
+  query,
+  where,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -28,21 +32,17 @@ export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// Ahora la función registerUser recibe también los datos extras
 export const registerUser = async (email, password, nombre, telefono, direccion) => {
-  // Crear usuario con email y contraseña
   const userCredential = await firebaseCreateUser(auth, email, password);
-
   const user = userCredential.user;
 
-  // Guardar datos extra en Firestore en la colección "usuarios" con doc id = UID del usuario
   await setDoc(doc(db, "usuarios", user.uid), {
     nombre,
     email,
     telefono,
     direccion,
     uid: user.uid,
-    creadoEn: new Date()  // Guardamos la fecha/hora actual
+    creadoEn: new Date()
   });
 
   return userCredential;
@@ -62,7 +62,11 @@ export const logoutUser = () => {
 
 export {
   collection,
+  addDoc,
+  query,
+  where,
+  getDocs,
   doc,
   setDoc,
-  getDoc,
+  getDoc
 };
