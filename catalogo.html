@@ -5,23 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Catálogo</title>
   <link rel="stylesheet" href="style.css"/>
-  <script type="module" src="firebase.js"></script>
 </head>
 <body>
-  <div id="header-container"></div>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('loaded');
+  });
+</script>
 
+  <div id="header-container"></div>
+  <!-- ✅ Cargar el header con Firebase -->
+  <script type="module">
+    import { iniciarHeaderConFirebase } from './header.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      iniciarHeaderConFirebase();
+    });
+  </script>
   <main>
     <h1 class="page-title">Catálogo Completo 🛍️</h1>
     <div id="catalogo-container" class="catalogo-grid"></div>
   </main>
 
   <div id="footer-container"></div>
+  <!-- ✅ Script general -->
   <script src="script.js"></script>
+  <!-- ✅ Cargar catálogo -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      cargarProductos();
+      cargarProductos(); // Sin categoría => carga todo
     });
   </script>
-  <script type="module" src="./header.js"></script>
 </body>
 </html>

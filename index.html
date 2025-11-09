@@ -279,7 +279,21 @@
   </style>
 </head>
 <body>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('loaded');
+    });
+  </script>
+
 <div id="header-container"></div>
+<script type="module">
+  import { iniciarHeaderConFirebase } from './header.js';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    iniciarHeaderConFirebase();
+  });
+</script>
+
   <main>
     <!-- TÍTULO DE LA ZONA DE PRODUCTOS -->
     <h2 class="section-title">PRODUCTOS DESTACADOS <span class="subline">Lo mejor para tus celebraciones</span></h2>
@@ -476,12 +490,5 @@
       loadSlides();
     })();
   </script>
-  <script type="module">
-  import { iniciarHeaderConFirebase } from './header.js';
-
-  document.addEventListener('DOMContentLoaded', () => {
-    iniciarHeaderConFirebase();
-  });
-</script>
 </body>
 </html>

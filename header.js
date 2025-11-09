@@ -5,6 +5,17 @@ export async function iniciarHeaderConFirebase() {
   const res = await fetch("header.html");
   const html = await res.text();
   headerContainer.innerHTML = html;
+  document.getElementById("header-container").style.opacity = "1";
+
+  /* ✅ ✅ AGREGAR ESTO AQUÍ (carrito funcionando) ✅ ✅ */
+  const cartBtn = document.getElementById("carrito-btn");
+  if (cartBtn) {
+    cartBtn.addEventListener("click", () => {
+      window.location.href = "carrito.html";
+    });
+  }
+  /* ✅ ✅ FIN de la parte agregada ✅ ✅ */
+
 
   const loginBtn = document.getElementById('loginBtn');
   const userProfile = document.getElementById('userProfile');
@@ -58,5 +69,7 @@ export async function iniciarHeaderConFirebase() {
     window.location.reload();
   });
 }
+
+
 
 

@@ -1593,3 +1593,19 @@ footer .footer-icons img:hover {
     font-size: 1.05rem;
   }
 }
+/* Header invisible pero ocupa espacio desde el inicio (evita saltos visuales) */
+#header-container {
+    opacity: 0;
+    transition: opacity 0s; /* Sin animación */
+}
+/* --- TRANSICIÓN SUAVE ENTRE PÁGINAS --- */
+body {
+    opacity: 0;
+    transition: opacity 0.18s ease-out;
+}
+
+body.loaded {
+    opacity: 1;
+}
+
+

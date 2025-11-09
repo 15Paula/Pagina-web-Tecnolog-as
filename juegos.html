@@ -5,10 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Juegos</title>
   <link rel="stylesheet" href="style.css"/>
-  <script type="module" src="firebase.js"></script>
 </head>
+
 <body>
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('loaded');
+  });
+</script>
+  <!-- ✅ Solo un header-container -->
   <div id="header-container"></div>
+
+  <!-- ✅ Ejecutar el header correctamente -->
+  <script type="module">
+    import { iniciarHeaderConFirebase } from './header.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      iniciarHeaderConFirebase();
+    });
+  </script>
 
   <main>
     <h1 class="page-title">Juegos 🎲</h1>
@@ -16,12 +31,15 @@
   </main>
 
   <div id="footer-container"></div>
+
+  <!-- ✅ scripts del catálogo -->
   <script src="script.js"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       cargarProductos('juegos');
     });
   </script>
-  <script type="module" src="./header.js"></script>
+
 </body>
 </html>
