@@ -11,7 +11,6 @@
   <div class="auth-container">
     <h1>Crear Cuenta</h1>
 
-    <!-- Div para mostrar mensajes de error -->
     <div id="error-message" style="color: red; margin-bottom: 1em;"></div>
 
     <form class="auth-form" id="registerForm">
@@ -42,7 +41,6 @@
     </p>
   </div>
 
-  <!-- Incluir SweetAlert2 desde CDN -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <script type="module">
@@ -64,12 +62,12 @@
     const confirmPassword = document.getElementById("confirm-password").value;
 
     if (password !== confirmPassword) {
-      errorDiv.textContent = "❌ Las contraseñas no coinciden.";
+      errorDiv.textContent = "Las contraseñas no coinciden.";
       return;
     }
 
     if (password.length < 6) {
-      errorDiv.textContent = "❌ La contraseña debe tener al menos 6 caracteres.";
+      errorDiv.textContent = "La contraseña debe tener al menos 6 caracteres.";
       return;
     }
 
@@ -87,10 +85,19 @@
 
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
-        errorDiv.textContent = "❌ Esta cuenta ya existe. Por favor, inicia sesión o usa otro correo.";
+        errorDiv.textContent = "Esta cuenta ya existe. Por favor, inicia sesión o usa otro correo.";
       } else {
-        errorDiv.textContent = "❌ Error: " + error.message;
+        errorDiv.textContent = "Error: " + error.message;
       }
     }
   });
-</script>
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.classList.add('loaded'); 
+    });
+  </script>
+
+</body>
+</html>
