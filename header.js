@@ -10,9 +10,9 @@ export async function iniciarHeaderConFirebase() {
   /* ✅ ✅ AGREGAR ESTO AQUÍ (carrito funcionando) ✅ ✅ */
   const cartBtn = document.getElementById("carrito-btn");
   if (cartBtn) {
-    cartBtn.addEventListener("click", () => {
-      window.location.href = "carrito.html";
-    });
+    // Nota: la lógica de interacción del carrito (hover, toggles móviles, redirección)
+    // se maneja en `script.js` mediante `inicializarCarrito`. No añadimos aquí
+    // un listener que fuerce la redirección pues interfiere con el comportamiento móvil.
   }
   /* ✅ ✅ FIN de la parte agregada ✅ ✅ */
 
@@ -68,6 +68,33 @@ export async function iniciarHeaderConFirebase() {
     await logoutUser();
     window.location.reload();
   });
+
+  // Si las funciones de inicialización del UI están disponibles en el scope global,
+  // las llamamos aquí para asegurarnos de que los handlers de búsqueda, carrito
+  // y menú hamburguesa estén registrados sobre el DOM recién inyectado.
+  try {
+    if (typeof window.inicializarCarrito === 'function') {
+      window.inicializarCarrito();
+    }
+  } catch (e) { console.warn('Error inicializando carrito desde header.js', e); }
+
+  try {
+    if (typeof window.inicializarBusqueda === 'function') {
+      window.inicializarBusqueda();
+    }
+  } catch (e) { console.warn('Error inicializando búsqueda desde header.js', e); }
+
+  try {
+    if (typeof window.inicializarMenuHamburguesa === 'function') {
+      window.inicializarMenuHamburguesa();
+    }
+  } catch (e) { console.warn('Error inicializando menú hamburguesa desde header.js', e); }
+
+  try {
+    if (typeof window.inicializarBusquedaMovil === 'function') {
+      window.inicializarBusquedaMovil();
+    }
+  } catch (e) { console.warn('Error inicializando búsqueda móvil desde header.js', e); }
 }
 
 

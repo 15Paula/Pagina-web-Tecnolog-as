@@ -718,23 +718,30 @@ async function cargarProductos(filtroCategoria = null) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  fetch('header.html')
-    .then(r => r.text())
-    .then(html => {
-      const h = document.getElementById('header-container');
-      if (h) {
-        h.innerHTML = html;
-        try { inicializarCarrito(); } catch (e) { console.warn('Error inicializando carrito', e); }
-        try { inicializarBusqueda(); } catch (e) { /* no crítico */ }
-        if (typeof inicializarMenuHamburguesa === 'function') {
-          try { inicializarMenuHamburguesa(); } catch (e) { console.warn('Error iniciando menu hamburguesa', e); }
-          try { inicializarBusquedaMovil(); } catch (e) { console.warn('Busqueda movil no inicializada', e); }
-        }
-      } else {
-        console.warn('#header-container no encontrado; header no inyectado.');
-      }
-    })
-    .catch(err => console.error('Error cargando header.html', err));
+  const h = document.getElementById('header-container');
+  if (h) {
+    const hasContent = (h.innerHTML || '').trim().length > 0;
+    if (!hasContent) {
+      fetch('header.html')
+        .then(r => r.text())
+        .then(html => {
+          h.innerHTML = html;
+          try { inicializarCarrito(); } catch (e) { console.warn('Error inicializando carrito', e); }
+          try { inicializarBusqueda(); } catch (e) { /* no crítico */ }
+          try { if (typeof inicializarMenuHamburguesa === 'function') inicializarMenuHamburguesa(); } catch (e) { console.warn('Error iniciando menu hamburguesa', e); }
+          try { if (typeof inicializarBusquedaMovil === 'function') inicializarBusquedaMovil(); } catch (e) { console.warn('Busqueda movil no inicializada', e); }
+        })
+        .catch(err => console.error('Error cargando header.html', err));
+    } else {
+      // Header ya fue inyectado (por ejemplo por `header.js`). Solo inicializamos handlers.
+      try { inicializarCarrito(); } catch (e) { console.warn('Error inicializando carrito', e); }
+      try { inicializarBusqueda(); } catch (e) { /* no crítico */ }
+      try { if (typeof inicializarMenuHamburguesa === 'function') inicializarMenuHamburguesa(); } catch (e) { console.warn('Error iniciando menu hamburguesa', e); }
+      try { if (typeof inicializarBusquedaMovil === 'function') inicializarBusquedaMovil(); } catch (e) { console.warn('Busqueda movil no inicializada', e); }
+    }
+  } else {
+    console.warn('#header-container no encontrado; header no inyectado.');
+  }
 
   fetch('footer.html')
     .then(r => r.text())
