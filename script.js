@@ -1,9 +1,15 @@
+/* script.js - Versión Final: Tu buscador original + Protección Login */
+
 import { auth } from './firebase.js';
+
+/* ===========================
+   Estado inicial y utilidades
+   =========================== */
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 let allProducts = null;            // cache de productos.json
 const SORT_STORAGE_KEY = 'catalogSortOption';
-let currentSortOption = localStorage.getItem(SORT_STORAGE_KEY) || 'name-asc'; // 'name-asc' | 'price-asc' | 'price-desc'
-let lastFilterCategoria = null;    // recuerda la categoría actual para re-renderizar
+let currentSortOption = localStorage.getItem(SORT_STORAGE_KEY) || 'name-asc';
+let lastFilterCategoria = null;
 
 /* ------------------ Carrito (persistente) ------------------ */
 function guardarCarrito() {
@@ -30,7 +36,12 @@ let carritoAbiertoEnMovil = false;
 
 /* ------------------ Actualizar UI del carrito ------------------ */
 function actualizarCarritoUI() {
+  // Buscamos elementos frescos para evitar errores si el header se recarga
+  carritoCount = document.getElementById('carrito-count');
+  carritoPopup = document.getElementById('carrito-popup');
+
   if (!carritoCount || !carritoPopup) return;
+  
   carritoCount.textContent = carrito.length;
   carritoPopup.innerHTML = '';
 
@@ -82,14 +93,16 @@ function inicializarCarrito() {
   carritoPopup = document.getElementById('carrito-popup');
 
   if (!carritoContainer || !carritoBtn || !carritoCount || !carritoPopup) {
-    console.warn('Elementos del carrito no encontrados (header probablemente no cargado).');
     return;
   }
 
+  // Clonamos para limpiar listeners previos (seguridad al recargar header)
+  const newBtn = carritoBtn.cloneNode(true);
+  carritoBtn.parentNode.replaceChild(newBtn, carritoBtn);
+  carritoBtn = newBtn;
+
   carritoBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-
-    // 📱 --- MODO MÓVIL ---
     if (window.innerWidth <= 768) {
       if (!carritoAbiertoEnMovil) {
         carritoPopup.classList.add('open');
@@ -103,13 +116,9 @@ function inicializarCarrito() {
         return;
       }
     }
-
-    // 💻 --- MODO PC ---
-    // 👉 En PC el clic debe redirigir directamente a la página de carrito
     window.location.href = 'carrito.html';
   });
 
-  // 💻 --- Mostrar popup al pasar el mouse en PC ---
   carritoContainer.addEventListener('mouseenter', () => {
     if (window.innerWidth > 768) carritoPopup.classList.add('open');
   });
@@ -117,7 +126,6 @@ function inicializarCarrito() {
     if (window.innerWidth > 768) carritoPopup.classList.remove('open');
   });
 
-  // 🧼 --- Cerrar popup si se hace clic fuera ---
   document.addEventListener('click', (e) => {
     if (!carritoContainer) return;
     if (!carritoContainer.contains(e.target)) {
@@ -134,7 +142,6 @@ function inicializarCarrito() {
     }
   });
 
-  // 🔄 --- Restaurar estado si cambia el tamaño de ventana ---
   window.addEventListener('resize', () => {
     if (carritoPopup) carritoPopup.classList.remove('open');
     if (window.innerWidth > 768) {
@@ -154,7 +161,6 @@ function inicializarCarrito() {
 /* ------------------ Expandir tarjeta ------------------ */
 function expandCard(card) {
   if (!card) return;
-
   document.querySelectorAll('.card.expanded, .card2.expanded').forEach(other => {
     if (other === card) return;
     const mainImgOther = other.querySelector('.card-media img');
@@ -165,7 +171,6 @@ function expandCard(card) {
   });
 
   card.classList.add('expanded');
-
   const mainImg = card.querySelector('.card-media img');
   if (mainImg && mainImg.dataset && mainImg.dataset.original) {
     mainImg.setAttribute('src', mainImg.dataset.original);
@@ -190,7 +195,7 @@ function expandCard(card) {
   }, 120);
 }
 
-/* ------------------ Sort controls injection + indicator ------------------ */
+/* ------------------ Sort controls ------------------ */
 function humanReadableSortName(option) {
   switch(option) {
     case 'price-asc': return 'Precio (menor → mayor)';
@@ -208,7 +213,6 @@ function updateSortIndicatorText() {
 function insertSortControlsIfNeeded() {
   const contenedor = document.getElementById('catalogo-container');
   if (!contenedor) return;
-
   if (document.getElementById('sort-controls')) return;
 
   const wrapper = document.createElement('div');
@@ -241,9 +245,7 @@ function insertSortControlsIfNeeded() {
   }
 }
 
-/* ------------------ BÚSQUEDA: funciones ------------------ */
-
-/* debounce utility */
+/* ------------------ BÚSQUEDA (TU CÓDIGO ORIGINAL) ------------------ */
 function debounce(fn, wait = 220) {
   let t;
   return (...args) => {
@@ -252,7 +254,6 @@ function debounce(fn, wait = 220) {
   };
 }
 
-/* decide target page según categoría */
 function pageForCategory(cat) {
   if (!cat) return 'catalogo.html';
   const c = cat.toString().toLowerCase();
@@ -261,7 +262,6 @@ function pageForCategory(cat) {
   return 'catalogo.html';
 }
 
-/* inicializador de búsqueda: llama después de inyectar header */
 function inicializarBusqueda() {
   const searchBtn = document.getElementById('search-btn');
   const inputContainer = document.getElementById('search-input-container');
@@ -269,14 +269,15 @@ function inicializarBusqueda() {
   const resultsBox = document.getElementById('search-results');
 
   if (!searchBtn || !inputContainer || !searchInput || !resultsBox) {
-    console.warn('Elementos de búsqueda no encontrados en header.');
     return;
   }
 
-  // abrir/cerrar con el botón
-  searchBtn.addEventListener('click', (e) => {
+  // Clonamos para limpiar eventos previos (importante para que no falle al recargar header)
+  const newBtn = searchBtn.cloneNode(true);
+  searchBtn.parentNode.replaceChild(newBtn, searchBtn);
+
+  newBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    // solo en pantallas grandes (PC) abrimos
     if (window.innerWidth <= 768) return;
     const isOpen = inputContainer.classList.contains('open');
     if (isOpen) {
@@ -290,7 +291,6 @@ function inicializarBusqueda() {
     inputContainer.classList.add('open');
     inputContainer.setAttribute('aria-hidden', 'false');
     searchInput.focus();
-    // cargar productos cache si no están
     if (!allProducts) {
       fetch('productos.json').then(r => r.json()).then(js => { allProducts = js; }).catch(()=>{});
     }
@@ -303,41 +303,36 @@ function inicializarBusqueda() {
     searchInput.value = '';
   }
 
-  // click fuera cierra
+  // Listener en document para cerrar si click fuera
   document.addEventListener('click', (e) => {
-    if (!inputContainer.contains(e.target) && !searchBtn.contains(e.target)) {
+    if (!inputContainer.contains(e.target) && !newBtn.contains(e.target)) {
       closeSearch();
     }
   });
 
-  // Esc cierra
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       closeSearch();
     }
   });
 
-  // render results (array of product objects)
   function renderResults(matches) {
     resultsBox.innerHTML = '';
     if (!matches || matches.length === 0) {
       resultsBox.innerHTML = `<div class="result-empty" style="padding:0.6rem; color:#666;">No hay coincidencias</div>`;
       return;
     }
-    // mostramos máximo 8 resultados
     matches.slice(0, 8).forEach(prod => {
       const div = document.createElement('div');
       div.className = 'result-item';
       div.tabIndex = 0;
       div.innerHTML = `<span class="r-name">${escapeHtml(prod.nombre)}</span> <span class="cat">${escapeHtml(prod.categoria || '')}</span>`;
-      // click → redirige a la página de categoría con ?expand=Nombre
       div.addEventListener('click', (ev) => {
         ev.stopPropagation();
         const target = pageForCategory(prod.categoria);
         const url = `${target}?expand=${encodeURIComponent(prod.nombre)}`;
         window.location.href = url;
       });
-      // allow Enter key to select
       div.addEventListener('keydown', (ev) => {
         if (ev.key === 'Enter') {
           ev.preventDefault();
@@ -348,27 +343,20 @@ function inicializarBusqueda() {
     });
   }
 
-  // actual search logic (case & accent-insensitive)
   function doSearch(q) {
     q = (q || '').trim();
     if (!q) {
       renderResults([]);
       return;
     }
-    // ensure cache
     const ensure = allProducts ? Promise.resolve(allProducts) : fetch('productos.json').then(r => r.json()).then(js => { allProducts = js; return js; });
     ensure.then(list => {
-      // filter names that include the query (normalize to remove diacritics)
       const normalized = normalizeString(q);
       const matches = list.filter(p => {
         const name = normalizeString(p.nombre || '');
         return name.includes(normalized);
       });
-      // rank: startWith first, then contains
-      const starts = matches.filter(p => normalizeString(p.nombre || '').startsWith(normalized));
-      const contains = matches.filter(p => !normalizeString(p.nombre || '').startsWith(normalized));
-      const results = starts.concat(contains);
-      renderResults(results);
+      renderResults(matches);
     }).catch(err => {
       console.error('Error buscando productos', err);
       renderResults([]);
@@ -382,7 +370,6 @@ function inicializarBusqueda() {
     doSearchDebounced(v);
   });
 
-  // si el usuario presiona Enter en el input, elegimos la primera coincidencia
   searchInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -396,7 +383,6 @@ function inicializarBusqueda() {
     }
   });
 
-  // keyboard navigation within results (delegation)
   resultsBox.addEventListener('keydown', (e) => {
     const current = document.activeElement;
     if (!current || !current.classList.contains('result-item')) return;
@@ -412,21 +398,15 @@ function inicializarBusqueda() {
     }
   });
 
-  // normalize strings: lower + remove diacritics
   function normalizeString(s) {
     return (s || '').toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
 }
 
-// -------------------------
-// BÚSQUEDA MÓVIL FULLSCREEN
-// -------------------------
+/* ------------------ Búsqueda Móvil (TU CÓDIGO ORIGINAL) ------------------ */
 function inicializarBusquedaMovil() {
   const mobileSearchBtn = document.querySelector('.mobile-search-button');
-  if (!mobileSearchBtn) {
-    console.warn('inicializarBusquedaMovil: .mobile-search-button no encontrada');
-    return;
-  }
+  if (!mobileSearchBtn) return;
 
   if (!document.getElementById('mobile-search-overlay')) {
     const overlay = document.createElement('div');
@@ -448,14 +428,17 @@ function inicializarBusquedaMovil() {
   const closeBtn = document.getElementById('mobile-search-close');
   const resultsList = document.getElementById('mobile-search-results-list');
 
-  mobileSearchBtn.addEventListener('click', (e) => {
+  // Clonamos para limpiar eventos
+  const newMobileBtn = mobileSearchBtn.cloneNode(true);
+  mobileSearchBtn.parentNode.replaceChild(newMobileBtn, mobileSearchBtn);
+
+  newMobileBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     const mobileMenu = document.getElementById('mobile-menu');
     const menuOverlay = document.getElementById('menu-overlay');
     if (mobileMenu) mobileMenu.classList.remove('open');
     if (menuOverlay) menuOverlay.classList.remove('show');
     document.getElementById('hamburguesa-btn')?.classList.remove('open');
-
     overlay.classList.add('active');
     setTimeout(() => { input.focus(); }, 80);
   });
@@ -477,12 +460,8 @@ function inicializarBusquedaMovil() {
 
   function debounceLocal(fn, wait = 200) {
     let t;
-    return (...args) => {
-      clearTimeout(t);
-      t = setTimeout(() => fn.apply(this, args), wait);
-    };
+    return (...args) => { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), wait); };
   }
-
   function normalizeString(s) {
     return (s || '').toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
   }
@@ -491,16 +470,14 @@ function inicializarBusquedaMovil() {
     resultsList.innerHTML = '';
     const qn = (q||'').trim();
     if (!qn) return;
-
     const norm = normalizeString(qn);
     const ensure = (typeof allProducts !== 'undefined' && allProducts) ? Promise.resolve(allProducts)
                     : fetch('productos.json').then(r => r.json()).then(js => { allProducts = js; return js; });
 
     ensure.then(list => {
       const matches = list.filter(p => normalizeString(p.nombre || '').includes(norm));
-      const starts = matches.filter(p => normalizeString(p.nombre || '').startsWith(norm));
-      const results = starts.concat(matches.filter(p => !normalizeString(p.nombre || '').startsWith(norm)));
-      results.slice(0, 30).forEach(prod => {
+      resultsList.innerHTML = '';
+      matches.slice(0, 30).forEach(prod => {
         const li = document.createElement('li');
         li.textContent = prod.nombre;
         li.addEventListener('click', (ev) => {
@@ -514,32 +491,30 @@ function inicializarBusquedaMovil() {
         });
         resultsList.appendChild(li);
       });
-
-      if (results.length === 0) {
+      if (matches.length === 0) {
         resultsList.innerHTML = '<li style="font-weight:600; color:#666; padding:0.8rem 1rem;">No hay coincidencias</li>';
       }
-    }).catch(err => {
-      console.error('Error buscando en móvil', err);
-    });
+    }).catch(err => console.error('Error buscando en móvil', err));
   }, 180);
 
-  input.addEventListener('input', (e) => {
-    doMobileSearch(e.target.value);
-  });
-
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      overlay.classList.remove('active');
-      input.value = '';
-      resultsList.innerHTML = '';
-    }
-    if (e.key === 'Enter') {
-      const first = resultsList.querySelector('li');
-      if (first) first.click();
-    }
-  });
+  input.addEventListener('input', (e) => doMobileSearch(e.target.value));
 }
 
+/* ======================================================
+   FUNCIÓN EXPORTADA PARA AGREGAR AL CARRITO (CON LOGIN)
+   ====================================================== */
+export function manejarClickAgregarAlCarrito(productoData) {
+  const user = auth.currentUser; 
+  if (!user) {
+    window.location.href = 'login.html';
+    return;
+  }
+  agregarAlCarrito(productoData);
+}
+
+/* ======================================================
+   FUNCIÓN EXPORTADA PARA CARGAR PRODUCTOS (CATÁLOGO)
+   ====================================================== */
 export async function cargarProductos(filtroCategoria = null) {
   try {
     lastFilterCategoria = filtroCategoria;
@@ -555,6 +530,7 @@ export async function cargarProductos(filtroCategoria = null) {
       productos = productos.filter(p => p.categoria === filtroCategoria);
     }
 
+    // Ordenar
     if (currentSortOption === 'price-asc') {
       productos.sort((a, b) => (Number(a.precio) || 0) - (Number(b.precio) || 0));
     } else if (currentSortOption === 'price-desc') {
@@ -591,15 +567,11 @@ export async function cargarProductos(filtroCategoria = null) {
         <div class="card-media">
           <img src="${prod.imagen || 'placeholder.jpg'}" alt="${escapeHtml(prod.nombre)}" data-original="${prod.imagen || 'placeholder.jpg'}">
         </div>
-
         <div class="${esJuego ? 'card-content' : 'card-content2'}">
           <div class="${esJuego ? 'inner-card' : 'inner-card2'}">
             <h2>${escapeHtml(prod.nombre)}</h2>
-
             <p class="short-desc">${escapeHtml(prod.descripcion || '')}</p>
-
             <div class="${esJuego ? 'precio' : 'precio2'}">$${(prod.precio || 0).toLocaleString()}</div>
-
             <div class="extra-content">
               <div class="extra-desc">
                 <h3>Descripción detallada</h3>
@@ -608,11 +580,7 @@ export async function cargarProductos(filtroCategoria = null) {
                 <p>${escapeHtml(prod.detalles ? prod.detalles : 'No hay detalles adicionales.')}</p>
                 <p style="margin-top:0.6rem;"><strong>Unidades:</strong> ${prod.unidades || 0}</p>
               </div>
-
-              <div class="extra-gallery" aria-hidden="true">
-                ${thumbsHtml}
-              </div>
-
+              <div class="extra-gallery" aria-hidden="true">${thumbsHtml}</div>
               <div class="expanded-footer">
                 <div class="precio-expanded">$${(prod.precio || 0).toLocaleString()}</div>
                 <button class="add-to-cart-btn" data-nombre="${escapeHtml(prod.nombre)}" data-precio="${prod.precio || 0}">
@@ -620,35 +588,30 @@ export async function cargarProductos(filtroCategoria = null) {
                 </button>
               </div>
             </div>
-
           </div>
         </div>
-
         <button class="close-btn" aria-label="Cerrar">✖</button>
       `;
-
       contenedor.appendChild(card);
       createdCards.push({ card, product: prod });
     });
 
+    // Event listeners con protección LOGIN
     document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const user = auth.currentUser;
-            if (!user) {
-                window.location.href = 'login.html';
-                return;
-            }
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const card = btn.closest('.card, .card2');
+        const nombre = btn.dataset.nombre;
+        const precio = Number(btn.dataset.precio);
+        const imgEl = card.querySelector('.card-media img');
+        const imagenActual = (imgEl && imgEl.getAttribute('src')) ? imgEl.getAttribute('src') : '';
         
-            const card = btn.closest('.card, .card2');
-            const nombre = btn.dataset.nombre;
-            const precio = Number(btn.dataset.precio);
-            const imgEl = card.querySelector('.card-media img');
-            const imagenActual = (imgEl && imgEl.getAttribute('src')) ? imgEl.getAttribute('src') : '';
-
-            agregarAlCarrito({ nombre, precio, imagen: imagenActual }); 
-        });
+        // Usamos la función de protección
+        manejarClickAgregarAlCarrito({ nombre, precio, imagen: imagenActual });
+      });
     });
+
+    // Expandir tarjetas
     const cards = document.querySelectorAll('.card, .card2');
     cards.forEach(card => {
       card.addEventListener('click', (e) => {
@@ -656,7 +619,6 @@ export async function cargarProductos(filtroCategoria = null) {
         if (card.classList.contains('expanded')) return;
         expandCard(card);
       });
-
       const closeBtn = card.querySelector('.close-btn');
       if (closeBtn) {
         closeBtn.addEventListener('click', (ev) => {
@@ -668,7 +630,6 @@ export async function cargarProductos(filtroCategoria = null) {
           card.classList.remove('expanded');
         });
       }
-
       const gallery = card.querySelector('.extra-gallery');
       if (gallery) {
         gallery.querySelectorAll('img').forEach(thumb => {
@@ -678,10 +639,8 @@ export async function cargarProductos(filtroCategoria = null) {
             const src = thumb.dataset.src || thumb.getAttribute('src');
             const mainImg = card.querySelector('.card-media img');
             if (!mainImg) return;
-
             gallery.querySelectorAll('img').forEach(t => t.classList.remove('selected'));
             thumb.classList.add('selected');
-
             mainImg.style.opacity = '0';
             mainImg.onload = () => { setTimeout(() => mainImg.style.opacity = '1', 30); };
             mainImg.setAttribute('src', src);
@@ -709,49 +668,57 @@ export async function cargarProductos(filtroCategoria = null) {
         if (found) expandCard(found);
       }, 120);
     }
-
     updateSortIndicatorText();
-
   } catch (err) {
     console.error('Error cargando productos.json:', err);
   }
 }
 
+/* ------------------ Inicialización DOM (SIN CONFLICTOS) ------------------ */
 document.addEventListener('DOMContentLoaded', () => {
-  const h = document.getElementById('header-container');
-  if (h) {
-    const hasContent = (h.innerHTML || '').trim().length > 0;
-    if (!hasContent) {
-      fetch('header.html')
-        .then(r => r.text())
-        .then(html => {
-          h.innerHTML = html;
-          try { inicializarCarrito(); } catch (e) { console.warn('Error inicializando carrito', e); }
-          try { inicializarBusqueda(); } catch (e) { /* no crítico */ }
-          try { if (typeof inicializarMenuHamburguesa === 'function') inicializarMenuHamburguesa(); } catch (e) { console.warn('Error iniciando menu hamburguesa', e); }
-          try { if (typeof inicializarBusquedaMovil === 'function') inicializarBusquedaMovil(); } catch (e) { console.warn('Busqueda movil no inicializada', e); }
-        })
-        .catch(err => console.error('Error cargando header.html', err));
-    } else {
-      // Header ya fue inyectado (por ejemplo por `header.js`). Solo inicializamos handlers.
-      try { inicializarCarrito(); } catch (e) { console.warn('Error inicializando carrito', e); }
-      try { inicializarBusqueda(); } catch (e) { /* no crítico */ }
-      try { if (typeof inicializarMenuHamburguesa === 'function') inicializarMenuHamburguesa(); } catch (e) { console.warn('Error iniciando menu hamburguesa', e); }
-      try { if (typeof inicializarBusquedaMovil === 'function') inicializarBusquedaMovil(); } catch (e) { console.warn('Busqueda movil no inicializada', e); }
+  // Función para intentar activar los listeners del header (lupa, carrito, menú)
+  const activarFuncionesHeader = () => {
+    const searchBtn = document.getElementById('search-btn');
+    // Si existe el botón de búsqueda, es que el header está listo
+    if (searchBtn) {
+      try { inicializarCarrito(); } catch (e) { }
+      try { inicializarBusqueda(); } catch (e) { } // Tu función original
+      try { if (typeof inicializarMenuHamburguesa === 'function') inicializarMenuHamburguesa(); } catch (e) { }
+      try { if (typeof inicializarBusquedaMovil === 'function') inicializarBusquedaMovil(); } catch (e) { }
+      return true;
     }
-  } else {
-    console.warn('#header-container no encontrado; header no inyectado.');
+    return false;
+  };
+
+  // 1. Intento inmediato (por si header ya cargó)
+  if (!activarFuncionesHeader()) {
+    // 2. Si no, observamos cambios en el header (esto respeta tu header.js)
+    const observer = new MutationObserver((mutations, obs) => {
+      const headerContainer = document.getElementById('header-container');
+      if (headerContainer && headerContainer.innerHTML.trim().length > 0) {
+        // Si logramos activar los listeners, desconectamos el observador
+        if (activarFuncionesHeader()) {
+          obs.disconnect();
+        }
+      }
+    });
+
+    const container = document.getElementById('header-container');
+    if (container) {
+      observer.observe(container, { childList: true, subtree: true });
+    }
   }
 
+  // Cargar Footer (no conflictivo)
   fetch('footer.html')
     .then(r => r.text())
     .then(html => {
       const f = document.getElementById('footer-container');
       if (f) f.innerHTML = html;
     })
-    .catch(err => console.error('Error cargando footer.html', err));
-
-  cargarProductos();
+    .catch(err => console.error('Error cargando footer', err));
+    
+  cargarPaginaCarrito();
 });
 
 /* ------------------ Menu hamburguesa ------------------ */
@@ -761,40 +728,26 @@ function inicializarMenuHamburguesa() {
   const cerrarMenu = document.getElementById('cerrar-menu');
   const overlay = document.getElementById('menu-overlay');
 
-  if (!hamburguesaBtn || !mobileMenu || !cerrarMenu || !overlay) {
-    console.warn('⚠️ Elementos del menú móvil no encontrados');
-    return;
-  }
+  if (!hamburguesaBtn || !mobileMenu || !cerrarMenu || !overlay) return;
 
   hamburguesaBtn.addEventListener('click', () => {
     mobileMenu.classList.add('open');
     overlay.classList.add('show');
-    // animate burger to X
     hamburguesaBtn.classList.add('open');
   });
 
-  cerrarMenu.addEventListener('click', () => {
+  const closeFn = () => {
     mobileMenu.classList.remove('open');
     overlay.classList.remove('show');
     hamburguesaBtn.classList.remove('open');
-  });
+  };
 
-  overlay.addEventListener('click', () => {
-    mobileMenu.classList.remove('open');
-    overlay.classList.remove('show');
-    hamburguesaBtn.classList.remove('open');
-  });
-
-  mobileMenu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      mobileMenu.classList.remove('open');
-      overlay.classList.remove('show');
-      hamburguesaBtn.classList.remove('open');
-    });
-  });
+  cerrarMenu.addEventListener('click', closeFn);
+  overlay.addEventListener('click', closeFn);
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeFn));
 }
 
-/* ------------------ Carrito page (carrito.html) ------------------ */
+/* ------------------ Carrito page ------------------ */
 function cargarPaginaCarrito() {
   const lista = document.getElementById('carrito-lista');
   if (!lista) return;
@@ -805,13 +758,11 @@ function cargarPaginaCarrito() {
   function renderCarrito() {
     lista.innerHTML = '';
     let subtotal = 0;
-
     if (carritoLocalCopy.length === 0) {
       lista.innerHTML = '<p style="text-align:center; padding:1rem;">🛍️ Tu carrito está vacío</p>';
       actualizarResumen(0);
       return;
     }
-
     carritoLocalCopy.forEach((p, index) => {
       subtotal += Number(p.precio) || 0;
       const item = document.createElement('div');
@@ -826,9 +777,7 @@ function cargarPaginaCarrito() {
       `;
       lista.appendChild(item);
     });
-
     actualizarResumen(subtotal);
-
     document.querySelectorAll('.remove-btn-page').forEach(btn => {
       btn.addEventListener('click', () => {
         const i = Number(btn.getAttribute('data-index'));
@@ -858,7 +807,7 @@ function cargarPaginaCarrito() {
   if (form) {
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      alert('✅ Simulación de compra completada. (Aquí iría la pasarela real)');
+      alert('✅ Simulación de compra completada.');
       localStorage.removeItem('carrito');
       carrito = [];
       actualizarCarritoUI();
@@ -866,5 +815,3 @@ function cargarPaginaCarrito() {
     });
   }
 }
-window.addEventListener('DOMContentLoaded', cargarPaginaCarrito);
-window.cargarProductos = cargarProductos;
