@@ -1,10 +1,4 @@
-/* script.js - carrito, carga dinámica de catálogo/header/footer, búsqueda y menú móvil
-   Archivo completo. Reemplaza tu script.js actual por este.
-*/
-
-/* ===========================
-   Estado inicial y utilidades
-   =========================== */
+import { auth } from './firebase.js';
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 let allProducts = null;            // cache de productos.json
 const SORT_STORAGE_KEY = 'catalogSortOption';
@@ -546,7 +540,7 @@ function inicializarBusquedaMovil() {
   });
 }
 
-async function cargarProductos(filtroCategoria = null) {
+export async function cargarProductos(filtroCategoria = null) {
   try {
     lastFilterCategoria = filtroCategoria;
     insertSortControlsIfNeeded();
@@ -638,17 +632,23 @@ async function cargarProductos(filtroCategoria = null) {
     });
 
     document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const card = btn.closest('.card, .card2');
-        const nombre = btn.dataset.nombre;
-        const precio = Number(btn.dataset.precio);
-        const imgEl = card.querySelector('.card-media img');
-        const imagenActual = (imgEl && imgEl.getAttribute('src')) ? imgEl.getAttribute('src') : '';
-        agregarAlCarrito({ nombre, precio, imagen: imagenActual });
-      });
-    });
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+        
+            const card = btn.closest('.card, .card2');
+            const nombre = btn.dataset.nombre;
+            const precio = Number(btn.dataset.precio);
+            const imgEl = card.querySelector('.card-media img');
+            const imagenActual = (imgEl && imgEl.getAttribute('src')) ? imgEl.getAttribute('src') : '';
 
+            agregarAlCarrito({ nombre, precio, imagen: imagenActual }); 
+        });
+    });
     const cards = document.querySelectorAll('.card, .card2');
     cards.forEach(card => {
       card.addEventListener('click', (e) => {
@@ -866,5 +866,5 @@ function cargarPaginaCarrito() {
     });
   }
 }
-
 window.addEventListener('DOMContentLoaded', cargarPaginaCarrito);
+window.cargarProductos = cargarProductos;

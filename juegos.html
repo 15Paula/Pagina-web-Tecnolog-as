@@ -6,17 +6,16 @@
   <title>Juegos</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
-
 <body>
-<script>
-  window.addEventListener('DOMContentLoaded', () => {
-    document.body.classList.add('loaded');
-  });
-</script>
-  <!-- ✅ Solo un header-container -->
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('loaded');
+    });
+  </script>
+
   <div id="header-container"></div>
 
-  <!-- ✅ Ejecutar el header correctamente -->
   <script type="module">
     import { iniciarHeaderConFirebase } from './header.js';
 
@@ -32,12 +31,14 @@
 
   <div id="footer-container"></div>
 
-  <!-- ✅ scripts del catálogo -->
-  <script src="script.js"></script>
+  <script type="module" src="script.js"></script>
 
-  <script>
+  <script type="module">
+    import { cargarProductos } from './script.js';
+
     document.addEventListener('DOMContentLoaded', () => {
-      cargarProductos('juegos');
+        // Aquí pasamos el filtro exacto para esta página
+        cargarProductos("juegos"); 
     });
   </script>
 

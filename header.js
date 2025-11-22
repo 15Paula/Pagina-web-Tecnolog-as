@@ -96,7 +96,3 @@ export async function iniciarHeaderConFirebase() {
     }
   } catch (e) { console.warn('Error inicializando búsqueda móvil desde header.js', e); }
 }
-
-
-
-

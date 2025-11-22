@@ -7,37 +7,40 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-<script>
-  window.addEventListener('DOMContentLoaded', () => {
-    document.body.classList.add('loaded');
-  });
-</script>
 
-<script>
-  window.addEventListener('DOMContentLoaded', () => {
-    document.body.classList.add('loaded');
-  });
-</script>
-<div id="header-container"></div>
-<!-- ✅ Cargar el header con Firebase -->
-<script type="module">
-  import { iniciarHeaderConFirebase } from './header.js';
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('loaded');
+    });
+  </script>
 
-  document.addEventListener('DOMContentLoaded', () => {
-    iniciarHeaderConFirebase();
-  });
-</script>
-<main>
-  <h1 class="page-title">Decoración 🪅</h1>
-  <div id="catalogo-container" class="catalogo-grid"></div>
-</main>
-<div id="footer-container"></div>
-<!-- ✅ Script del catálogo -->
-<script src="script.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    cargarProductos('decoracion');
-  });
-</script>
+  <div id="header-container"></div>
+
+  <script type="module">
+    import { iniciarHeaderConFirebase } from './header.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      iniciarHeaderConFirebase();
+    });
+  </script>
+
+  <main>
+    <h1 class="page-title">Decoración 🪅</h1>
+    <div id="catalogo-container" class="catalogo-grid"></div>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <script type="module" src="script.js"></script>
+
+  <script type="module">
+    import { cargarProductos } from './script.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // Aquí pasamos el filtro exacto
+        cargarProductos("decoracion"); 
+    });
+  </script>
+
 </body>
 </html>
