@@ -1607,3 +1607,85 @@ body {
 body.loaded {
     opacity: 1;
 }
+/* --- Overlay (Fondo Blanco/Transparente que tapa el sitio) --- */
+.cookie-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semi-transparente */
+  z-index: 2147483647; /* Máxima prioridad */
+  display: none; /* Se activa con JS */
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- La Cajita Gris (Modal) --- */
+.cookie-modal {
+  background-color: #E6E6E6; /* El gris de tu imagen */
+  padding: 2rem;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 500px; /* Tamaño máximo */
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* --- Imagen de la Galleta --- */
+.cookie-img {
+  width: 60px; /* Tamaño de la galleta */
+  height: auto;
+  margin-bottom: 0.5rem;
+}
+
+/* --- Texto --- */
+.cookie-text {
+  color: #333;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+/* --- Contenedor de Botones --- */
+.cookie-buttons {
+  display: flex;
+  gap: 1.5rem; /* Separación entre botones */
+  justify-content: center;
+  width: 100%;
+}
+
+/* --- Estilo de los Botones --- */
+.btn-cookie {
+  background-color: #8B0000; /* Rojo oscuro/Vino (similar a la imagen) */
+  color: white;
+  border: none;
+  padding: 0.6rem 2rem;
+  border-radius: 50px; /* Bordes muy redondos */
+  font-weight: bold;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  text-transform: uppercase; /* Texto en mayúsculas */
+}
+
+.btn-cookie:hover {
+  transform: scale(1.05);
+  background-color: #a00000;
+}
+
+/* Responsive para móviles */
+@media (max-width: 480px) {
+  .cookie-buttons {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .btn-cookie {
+    width: 100%;
+  }
+}
