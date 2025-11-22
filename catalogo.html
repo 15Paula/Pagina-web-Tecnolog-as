@@ -36,6 +36,16 @@
       cargarProductos(); // Sin categoría => carga todo
     });
   </script>
-  <script type="module" src="loginCarrito.js"></script>
+  <script type="module" src="script.js"></script>
+
+  <script type="module">
+    import { cargarProductos } from './script.js';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        cargarProductos(); // Llamamos sin filtro para que cargue todo el catálogo
+    });
+  </script>
+</body>
+</html>
 </body>
 </html>
