@@ -167,6 +167,36 @@
             document.body.appendChild(aside); 
             loadCartFromLocalStorage(); 
             renderCart(currentCartItems); 
+
+            /* --- 💳 AUTO-FORMATO TARJETA (Espacios cada 4 números) --- */
+            const tarjetaInput = document.getElementById('tarjeta');
+            if(tarjetaInput) {
+                tarjetaInput.addEventListener('input', (e) => {
+                    // 1. Quitar todo lo que NO sea número (letras, símbolos)
+                    let value = e.target.value.replace(/\D/g, '');
+                    // 2. Limitar a 16 dígitos
+                    value = value.substring(0, 16);
+                    // 3. Poner espacio cada 4 grupos
+                    let formatted = value.match(/.{1,4}/g)?.join(' ') || value;
+                    e.target.value = formatted;
+                });
+            }
+
+            /* --- 📅 AUTO-FORMATO FECHA (Barra automática MM/AA) --- */
+            const fechaInput = document.getElementById('expiracion');
+            if(fechaInput) {
+                fechaInput.addEventListener('input', (e) => {
+                    // 1. Quitar no-números
+                    let value = e.target.value.replace(/\D/g, '');
+                    // 2. Limitar a 4 dígitos (MMAA)
+                    value = value.substring(0, 4);
+                    // 3. Poner la barra después del segundo número
+                    if(value.length >= 2) {
+                        value = value.substring(0,2) + '/' + value.substring(2);
+                    }
+                    e.target.value = value;
+                });
+            }
         });
 
         document.addEventListener('submit', async (e)=>{ 
@@ -174,7 +204,6 @@
                 e.preventDefault(); 
                 
                 if(!currentCartItems||currentCartItems.length===0){ 
-                    // Usamos Swal para errores también
                     Swal.fire({ icon: 'error', title: 'Oops...', text: 'El carrito está vacío', confirmButtonColor: '#D45510' });
                     return; 
                 } 
@@ -220,17 +249,24 @@
                     btn.disabled=false; 
                     btn.textContent='Pagar Ahora y Vaciar Carrito'; 
 
-                    // 2. ESTE ES EL AVISO NUEVO Y BONITO (SweetAlert2)
+                    /* --- TICKET DE COMPRA --- */
                     Swal.fire({
-                      title: '¡Pedido Exitoso!',
-                      text: 'Tu ID de pedido es: ' + idPedido,
-                      icon: 'success', // Esto pone el chulito verde animado
-                      confirmButtonText: 'Aceptar',
+                      title: '<strong style="color:#333;">¡Gracias por tu compra!</strong>',
+                      icon: 'success',
+                      html: `
+                        <p style="color:#666; margin-bottom:15px;">Hemos recibido tu pedido correctamente.</p>
+                        <div style="background-color: #fff4e6; border: 2px dashed #D45510; border-radius: 12px; padding: 15px; margin: 10px 0;">
+                            <p style="margin:0; font-size:0.9rem; color:#888;">Tu ID de Pedido es:</p>
+                            <h2 style="margin:5px 0 0 0; color:#D45510; font-family:monospace; font-size:1.4rem; font-weight:bold; letter-spacing:1px;">${idPedido}</h2>
+                        </div>
+                        <p style="font-size:0.85rem; color:#888; margin-top:10px;">Guarda este número para cualquier consulta.</p>
+                      `,
+                      confirmButtonText: 'Volver a la Tienda',
                       confirmButtonColor: '#D45510',
-                      footer: '<p>Gracias por tu compra</p>'
+                      allowOutsideClick: false,
+                      backdrop: `rgba(0,0,0,0.6)`
                     }).then((result) => {
                       if (result.isConfirmed) {
-                         // Redirigir al inicio cuando le den click en Aceptar
                          window.location.href = 'index.html';
                       }
                     });
