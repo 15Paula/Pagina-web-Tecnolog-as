@@ -1,6 +1,6 @@
 <header>
-  <nav class="main-nav">
-    <button id="hamburguesa-btn" class="hamburguesa-btn" aria-label="Abrir menú">
+  <div class="main-nav">
+    <button id="hamburguesa-btn" class="hamburguesa-btn" aria-label="Abrir menú" aria-controls="mobile-menu" aria-expanded="false">
       <span class="hb-line hb-line-1"></span>
       <span class="hb-line hb-line-2"></span>
       <span class="hb-line hb-line-3"></span>
@@ -18,12 +18,14 @@
       </div>
     </div>
 
-    <div class="menu">
-      <a href="index.html">INICIO</a>
-      <a href="juegos.html">JUEGOS</a>
-      <a href="decoracion.html">DECORACIÓN</a>
-      <a href="catalogo.html">CATÁLOGO</a>
-    </div>
+    <nav class="menu" aria-label="Menú principal">
+      <ul class="menu-list" style="display:flex; gap:1rem; list-style:none; margin:0; padding:0;">
+        <li class="menu-item"><a href="index.html">INICIO</a></li>
+        <li class="menu-item"><a href="juegos.html">JUEGOS</a></li>
+        <li class="menu-item"><a href="decoracion.html">DECORACIÓN</a></li>
+        <li class="menu-item"><a href="catalogo.html">CATÁLOGO</a></li>
+      </ul>
+    </nav>
 
     <div class="user-actions" style="position: relative; display: flex; align-items: center; gap: 20px;">
       <!-- Botón iniciar sesión SIN CAMBIOS: mantiene el onclick -->
@@ -67,7 +69,7 @@
         <div id="carrito-popup" class="carrito-popup" style="position:absolute; right:0; background:white; border:1px solid #ccc; border-radius:8px; width: 280px; max-height: 350px; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 150;"></div>
       </div>
     </div>
-  </nav>
+  </div>
 
   <div id="menu-overlay" class="menu-overlay" aria-hidden="true"></div>
 

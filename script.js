@@ -406,11 +406,11 @@ function inicializarBusquedaMovil() {
   if (!document.getElementById('mobile-search-overlay')) {
     const overlay = document.createElement('div');
     overlay.id = 'mobile-search-overlay';
-    overlay.innerHTML = `
+      overlay.innerHTML = `
       <div class="mobile-search-box" role="dialog" aria-modal="true">
         <div class="mobile-search-header">
           <input id="mobile-search-input" type="search" placeholder="Buscar productos..." autocomplete="off" />
-          <button id="mobile-search-close" aria-label="Cerrar búsqueda">✖</button>
+          <button id="mobile-search-close" aria-label="Cerrar búsqueda">⬅</button>
         </div>
         <div class="mobile-search-results"><ul id="mobile-search-results-list"></ul></div>
       </div>
@@ -709,7 +709,10 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(r => r.text())
     .then(html => {
       const f = document.getElementById('footer-container');
-      if (f) f.innerHTML = html;
+      if (f) {
+        f.innerHTML = html;
+        try { if (typeof inicializarFooter === 'function') inicializarFooter(); } catch (e) { console.error('inicializarFooter error', e); }
+      }
     })
     .catch(err => console.error('Error cargando footer', err));
     
@@ -740,6 +743,57 @@ function inicializarMenuHamburguesa() {
   cerrarMenu.addEventListener('click', closeFn);
   overlay.addEventListener('click', closeFn);
   mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeFn));
+}
+
+/* ------------------ Footer helpers ------------------ */
+function inicializarFooter() {
+  const phoneBtn = document.getElementById('phone-btn');
+  const phonePopup = document.getElementById('phone-popup');
+  const copyBtn = document.getElementById('phone-copy');
+  if (!phoneBtn || !phonePopup) return;
+
+  const showToast = (msg, type = 'info') => {
+    if (document.getElementById('copy-toast')) return;
+    const t = document.createElement('div');
+    t.id = 'copy-toast';
+    t.textContent = msg;
+    t.setAttribute('role', 'status');
+    t.setAttribute('aria-live', 'polite');
+    t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:' + (type === 'error' ? '#D45510' : '#222') + ';color:#fff;padding:10px 14px;border-radius:8px;z-index:10000;opacity:0;transition:opacity .18s ease;';
+    document.body.appendChild(t);
+    requestAnimationFrame(() => t.style.opacity = '1');
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 220); }, 3000);
+  };
+
+  const showPhonePopup = () => { phonePopup.style.display = 'block'; phonePopup.setAttribute('aria-hidden', 'false'); };
+  const hidePhonePopup = () => { phonePopup.style.display = 'none'; phonePopup.setAttribute('aria-hidden', 'true'); };
+
+  phoneBtn.addEventListener('click', (e) => { e.stopPropagation(); if (phonePopup.style.display === 'block') hidePhonePopup(); else showPhonePopup(); });
+
+  // click outside closes
+  document.addEventListener('click', (e) => {
+    const target = e.target;
+    if (!phonePopup.contains(target) && !phoneBtn.contains(target)) hidePhonePopup();
+  });
+
+  // prevent clicks inside popup from closing
+  phonePopup.addEventListener('click', (e) => e.stopPropagation());
+
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async (ev) => {
+      ev.preventDefault();
+      try {
+        const number = '3177136772';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(number);
+        } else {
+          const ta = document.createElement('textarea'); ta.value = number; ta.style.position = 'fixed'; ta.style.left = '-9999px'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove();
+        }
+        showToast('Número copiado al portapapeles');
+        hidePhonePopup();
+      } catch (err) { console.error(err); showToast('No se pudo copiar', 'error'); }
+    });
+  }
 }
 
 /* ------------------ Carrito page ------------------ */

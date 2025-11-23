@@ -2,9 +2,28 @@
   <div class="footer-container">
     <h2 class="contact-text">C O N T A C T O</h2>
     <div class="footer-icons">
-      <img src="Imagenes/Instagram.png" alt="Instagram" class="icon">
+      <a id="instagram-link" href="https://www.instagram.com/impresos.cro05/" target="_blank" rel="noopener noreferrer" aria-label="Ir a Instagram">
+        <img src="Imagenes/Instagram.png" alt="Instagram" class="icon">
+      </a>
       <img src="Imagenes/correo.png" alt="Correo" class="icon">
-      <img src="Imagenes/telefono.png" alt="Telefono" class="icon">
+      <button id="phone-btn" class="icon-btn" aria-label="Mostrar teléfono"> 
+        <img src="Imagenes/telefono.png" alt="Telefono" class="icon">
+      </button>
+    </div>
+    <!-- popup que muestra el número (similar al carrito) -->
+    <div id="phone-popup" class="phone-popup" aria-hidden="true" style="display:none; position: absolute; left:50%; transform:translateX(-50%); bottom:70px; width: 300px; max-width:90%; box-shadow:0 6px 18px rgba(0,0,0,0.12); background:white; border-radius:10px; z-index:120;">
+      <div style="padding:12px;">
+        <div style="font-weight:800; color:#1B142E; margin-bottom:6px; text-align:center;">Contacto telefónico</div>
+        <div style="display:flex; align-items:center; gap:8px; justify-content:center;">
+          <div id="phone-number" style="font-size:1.05rem; font-weight:700;">+57 317 713 6772</div>
+        </div>
+        <div style="display:flex; gap:8px; justify-content:center; margin-top:10px;">
+          <button id="phone-copy" style="background:#D45510;color:#fff;border:none;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700;">Copiar</button>
+          <a id="phone-call" href="tel:+573177136772" style="background:#eee;color:#1B142E;padding:8px 10px;border-radius:8px;text-decoration:none;font-weight:700;">Llamar</a>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Footer initialization moved to main script (script.js) because injected HTML scripts don't run. -->
 </footer>

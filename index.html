@@ -229,48 +229,83 @@
       .media-overlay { display: none; }
     }
 
-    /* ---------- SOBRE NOSOTROS ---------- */
+    /* ---------- SOBRE NOSOTROS (centrado) ---------- */
     .about {
-      max-width: 1000px;
-      margin: 1.6rem auto;
-      padding: 1.6rem;
+      max-width: 920px;
+      margin: 2rem auto;
+      padding: 1.8rem;
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+      border-radius: 14px;
+      box-shadow: 0 8px 26px rgba(0,0,0,0.06);
       color: #222;
       line-height: 1.6;
-      text-align: left;
+      text-align: center;
     }
     .about .about-inner {
       display: grid;
-      grid-template-columns: 1fr 420px;
-      gap: 1.2rem;
+      grid-template-columns: 1fr 340px;
+      gap: 1.4rem;
       align-items: center;
+      justify-content: center;
     }
+    .about .about-inner > div:first-child { max-width: 660px; margin: 0 auto; }
     .about h2 {
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       color: #1B142E;
       margin-bottom: 0.6rem;
       text-align: center;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.4px;
       font-weight: 900;
     }
     .about .lead {
       font-weight: 700;
-      font-size: 1.02rem;
+      font-size: 1.04rem;
       color: #333;
-      margin-bottom: 0.6rem;
+      margin: 0.2rem auto 0.8rem auto;
+      text-align: center;
     }
     .about .mission {
       background: linear-gradient(180deg, rgba(212,85,16,0.06), rgba(0,0,0,0.02));
       border-left: 4px solid rgba(212,85,16,0.9);
-      padding: 0.8rem;
+      padding: 0.9rem;
       border-radius: 8px;
+      text-align: left;
     }
+    /* Right card */
+    .about .right-card {
+      background: linear-gradient(180deg,#fff,#fbfbfb);
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+      margin: 0 auto;
+    }
+    .about .right-card img { width:100%; height:180px; object-fit:cover; border-radius:8px; margin-bottom:0.8rem; }
+    .about .cta { display:inline-block; margin-top:0.9rem; background:#D45510; color:white; padding:0.55rem 0.9rem; border-radius:10px; font-weight:800; text-decoration:none; }
     @media (max-width: 900px) {
       .about .about-inner { grid-template-columns: 1fr; }
-      .about h2 { text-align: left; }
+      .about h2 { text-align: center; }
+      .about .mission { text-align: left; }
+      .about .right-card img { height: 220px; }
     }
+
+    /* Title outside card */
+    #sobre-title {
+      font-size: 1.35rem;
+      color: #1B142E;
+      margin: 1.2rem auto 0.6rem;
+      text-align: center;
+      letter-spacing: 0.4px;
+      font-weight: 900;
+      max-width: 1100px;
+    }
+
+    /* Center the values / features below the about section */
+    .values {
+      max-width: 1000px; margin: 1rem auto 2rem; display:grid; grid-template-columns: repeat(3,1fr); gap:0.9rem; text-align:center; align-items:start;
+    }
+    .value-card { background: transparent; padding: 0.6rem 0.8rem; border-radius:8px; }
+    .value-card .icon { font-size:1.6rem; margin-bottom:0.5rem; display:block; }
 
     .values { max-width: 1000px; margin: 1rem auto 2rem; display:grid; grid-template-columns: repeat(3,1fr); gap:0.9rem; }
     @media (max-width:900px){ .values { grid-template-columns: 1fr; } }
@@ -306,26 +341,38 @@
       <div id="carouselDots" class="carousel-dots" aria-hidden="false"></div>
     </section>
 
+    <h2 id="sobre-title">SOBRE NOSOTROS</h2>
     <section class="about" aria-labelledby="sobre-title">
-      <h2 id="sobre-title">SOBRE NOSOTROS</h2>
       <div class="about-inner">
         <div>
           <p class="lead"><strong>Somos un emprendimiento dedicado a crear productos decorativos para fiestas y juegos didácticos, diseñados con creatividad, pasión y un toque nacional.</strong></p>
 
-          <p>Nos destacamos por ofrecer artículos fabricados localmente, con diseños únicos que aportan valor, diversión y significado a cada celebración.</p>
+          <p>Ofrecemos artículos fabricados localmente, con diseños únicos que aportan valor, diversión y significado a cada celebración. Cada pieza se prueba para asegurar durabilidad y belleza.</p>
 
           <div class="mission">
             <p><strong>Nuestra misión:</strong> Llevar alegría y originalidad a cada evento mediante productos de calidad, accesibles y con identidad.</p>
-            <p><strong>Visión:</strong> Ser una referencia nacional en diseño festivo y productos didácticos, apoyando talento local y prácticas sostenibles.</p>
+            <p style="margin-top:0.4rem;"><strong>Visión:</strong> Ser una referencia nacional en diseño festivo y productos didácticos, apoyando talento local y prácticas sostenibles.</p>
           </div>
+
+          <p style="margin-top:0.9rem;">Contamos con un equipo pequeño y comprometido que cuida cada detalle: desde el diseño hasta el embalaje.</p>
+          <a href="registro.html" class="cta" aria-label="Conócenos">Conócenos</a>
         </div>
 
-        <div>
-          <div style="background:linear-gradient(135deg,#fff,#f8f8f8); border-radius:10px; padding:1rem; text-align:center;">
-            <p style="margin:0; font-weight:800; color:#1B142E;">Calidad & Diseño Local</p>
-            <p style="margin:0.6rem 0 0 0; color:#555;">Apoyamos la producción local y el detalle en cada pieza.</p>
+        <aside class="right-card" aria-hidden="false">
+          <img src="Imagenes/about-hero.jpg" alt="Taller y productos" onerror="this.onerror=null;this.src='Imagenes/Logo.png'">
+          <p style="margin:0; font-weight:800; color:#1B142E;">Calidad & Diseño Local</p>
+          <p style="margin:0.45rem 0 0 0; color:#555;">Apoyamos la producción local y el detalle en cada pieza.</p>
+          <div style="display:flex; gap:0.6rem; justify-content:center; margin-top:0.9rem;">
+            <div style="text-align:center;">
+              <div style="font-weight:900; font-size:1.05rem;">+250</div>
+              <div style="font-size:0.85rem; color:#666;">Productos</div>
+            </div>
+            <div style="text-align:center;">
+              <div style="font-weight:900; font-size:1.05rem;">+75</div>
+              <div style="font-size:0.85rem; color:#666;">Eventos</div>
+            </div>
           </div>
-        </div>
+        </aside>
       </div>
     </section>
 

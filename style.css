@@ -534,6 +534,22 @@ footer .footer-icons img {
   transition: transform 0.2s ease;
 }
 
+/* make icon buttons visually identical to images */
+footer .footer-icons .icon-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* phone popup styling (small card above footer) */
+.phone-popup { display:none; }
+.phone-popup[aria-hidden="false"]{ display:block; }
+
 footer .footer-icons img:hover {
   transform: scale(1.15);
 }
@@ -1326,6 +1342,16 @@ footer .footer-icons img:hover {
   flex: 1;
 }
 
+/* Cuando el menú está marcado como lista dentro de un <nav class="menu"> */
+.menu .menu-list {
+  display: flex;
+  gap: 1.4rem;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
 /* user-actions se mantiene en la derecha */
 .user-actions { display: flex; gap: 0.8rem; align-items: center; }
 
@@ -1500,12 +1526,18 @@ footer .footer-icons img:hover {
 
 #mobile-search-close {
   position: absolute;
-  right: 6%;
+  left: 6%;
   background: none;
   border: none;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
+  font-weight: 700;
   color: #222;
   cursor: pointer;
+}
+
+/* Ajuste para que el botón de cerrar no se superponga con la X nativa del input */
+#mobile-search-input {
+  padding-left: 2.8rem; /* deja espacio para el botón 'cerrar' a la izquierda */
 }
 
 /* resultados */
