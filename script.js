@@ -1,10 +1,5 @@
-/* script.js - Versión Final: Tu buscador original + Protección Login */
+import { auth, registrarPedido } from './firebase.js';
 
-import { auth } from './firebase.js';
-
-/* ===========================
-   Estado inicial y utilidades
-   =========================== */
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 let allProducts = null;            // cache de productos.json
 const SORT_STORAGE_KEY = 'catalogSortOption';
@@ -803,15 +798,71 @@ function cargarPaginaCarrito() {
 
   renderCarrito();
 
+  /* --- BLOQUE CORREGIDO PARA GUARDAR EN BD --- */
   const form = document.getElementById('checkoutForm');
   if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      alert('✅ Simulación de compra completada.');
-      localStorage.removeItem('carrito');
-      carrito = [];
-      actualizarCarritoUI();
-      window.location.href = 'index.html';
+      
+      const user = auth.currentUser;
+      if (!user) {
+        alert("Debes iniciar sesión para comprar.");
+        return;
+      }
+
+      if (!carrito || carrito.length === 0) {
+        alert("Tu carrito está vacío.");
+        return;
+      }
+
+      const btn = document.getElementById('checkout-btn');
+      btn.disabled = true;
+      btn.textContent = 'Procesando compra...';
+
+      try {
+        // 1. Recopilar datos del formulario
+        const datosEnvio = {
+          nombre: document.getElementById('nombre').value,
+          correo: document.getElementById('correo').value,
+          direccion: document.getElementById('direccion').value,
+          ciudad: document.getElementById('ciudad').value,
+          telefono: document.getElementById('telefono').value
+        };
+
+        // 2. Calcular totales
+        let subtotal = 0;
+        carrito.forEach(p => subtotal += (Number(p.precio) || 0));
+        const total = subtotal * 1.19; // + IVA
+
+        // 3. Armar el objeto del pedido
+        const nuevoPedido = {
+          uidUsuario: user.uid,
+          emailUsuario: user.email,
+          fecha: new Date(), // Guarda fecha y hora
+          productos: carrito, // Guarda qué compró
+          envio: datosEnvio,
+          total: total,
+          estado: "pendiente" // Para que tú lo gestiones después
+        };
+
+        // 4. ENVIAR A FIREBASE (La magia)
+        const idPedido = await registrarPedido(nuevoPedido);
+
+        // 5. Éxito
+        alert(`✅ ¡Compra exitosa!\nID de pedido: ${idPedido}\nGracias por tu compra.`);
+        
+        // Limpiar todo
+        localStorage.removeItem('carrito');
+        carrito = [];
+        actualizarCarritoUI();
+        window.location.href = 'index.html';
+
+      } catch (error) {
+        console.error(error);
+        alert("❌ Hubo un error al procesar tu pedido. Inténtalo de nuevo.");
+        btn.disabled = false;
+        btn.textContent = 'Pagar Ahora';
+      }
     });
   }
 }

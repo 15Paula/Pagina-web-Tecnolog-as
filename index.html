@@ -295,22 +295,17 @@
 </script>
 
   <main>
-    <!-- TÍTULO DE LA ZONA DE PRODUCTOS -->
     <h2 class="section-title">PRODUCTOS DESTACADOS <span class="subline">Lo mejor para tus celebraciones</span></h2>
 
-    <!-- CARRUSEL DESTACADOS - primero en la página -->
     <section class="carousel-root" aria-label="Productos destacados">
       <div id="carousel" class="carousel" role="region" aria-roledescription="slide"></div>
 
-      <!-- flechas -->
       <button id="prevBtn" class="nav-arrow nav-left" aria-label="Anterior">◀</button>
       <button id="nextBtn" class="nav-arrow nav-right" aria-label="Siguiente">▶</button>
 
-      <!-- dots -->
       <div id="carouselDots" class="carousel-dots" aria-hidden="false"></div>
     </section>
 
-    <!-- SOBRE NOSOTROS -->
     <section class="about" aria-labelledby="sobre-title">
       <h2 id="sobre-title">SOBRE NOSOTROS</h2>
       <div class="about-inner">
@@ -334,7 +329,6 @@
       </div>
     </section>
 
-    <!-- pequeños valores -->
     <section class="values" aria-label="Por qué elegirnos">
       <div class="value-card">
         <div class="icon">🎨</div>
@@ -402,8 +396,6 @@
         if(!carouselEl) return;
         const prod = slides[index];
         
-        // IMPORTANTE: Si las imágenes no cargan, revisa si en tu JSON dicen "Imágenes/..." o solo "foto.jpg"
-        // Aquí asumo que la ruta en el JSON es correcta.
         carouselEl.innerHTML = `
           <article class="slide" data-index="${index}">
             <div class="slide-media">
@@ -476,7 +468,6 @@
           if (e.key === 'ArrowLeft') prev();
         });
 
-        // DETECTAR CLIC EN BOTÓN AÑADIR
         if(carouselEl) {
             carouselEl.addEventListener('click', (e) => {
               const overlayBtn = e.target.closest('.overlay-add');
@@ -484,167 +475,14 @@
               const btn = overlayBtn || addBtn;
               
               if (btn) {
+                /* --- 🔥 CORRECCIÓN DEL DOBLE CLIC AQUÍ 🔥 --- */
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+
                 const nombre = btn.dataset.nombre;
                 const precio = parseFloat(btn.dataset.precio || 0);
                 
-                // 1. Ejecutamos la lógica REAL (Login -> Carrito)
-                manejarClickAgregarAlCarrito({ nombre, precio });
-
-                // 2. (Opcional) Si extrañas el aviso, descomenta la siguiente línea:
-                // alert(`✅ Agregado: ${nombre}`);
-              }
-            });
-
-            let touchStartX = null;
-            let touchEndX = null;
-            carouselEl.addEventListener('touchstart', (e) => {
-              touchStartX = e.changedTouches[0].screenX;
-            });
-            carouselEl.addEventListener('touchend', (e) => {
-              touchEndX = e.changedTouches[0].screenX;
-              if (touchStartX - touchEndX > 40) next();
-              else if (touchEndX - touchStartX > 40) prev();
-            });
-        }
-      }
-
-      loadSlides();
-    })();
-  </script>
-</body>
-</html>
-
-  <div id="footer-container"></div>
-  <script type="module" src="script.js"></script>
-  <script type="module">
-    import { cargarProductos } from './script.js';
-    document.addEventListener('DOMContentLoaded', () => {
-        // Cargamos los productos en el index
-        cargarProductos(); 
-    });
-  </script>
-
-  <script type="module">
-    // Importamos la función de seguridad
-    import { manejarClickAgregarAlCarrito } from './script.js';
-
-    (function(){
-      const carouselEl = document.getElementById('carousel');
-      const dotsEl = document.getElementById('carouselDots');
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-
-      let slides = [];
-      let current = 0;
-
-      async function loadSlides() {
-        try {
-          const res = await fetch('productos.json');
-          if (!res.ok) return;
-          const productos = await res.json();
-          slides = productos.slice(0, 4);
-          
-          if (slides.length === 0) {
-            if(carouselEl) carouselEl.innerHTML = '<div style="padding:2rem; text-align:center;">No hay productos destacados.</div>';
-            if(prevBtn) prevBtn.style.display = 'none';
-            if(nextBtn) nextBtn.style.display = 'none';
-            return;
-          }
-          renderSlide(current);
-          renderDots();
-          attachEvents();
-        } catch (err) {
-          console.error('Error cargando productos destacados:', err);
-        }
-      }
-
-      function renderSlide(index) {
-        if(!carouselEl) return;
-        const prod = slides[index];
-        carouselEl.innerHTML = `
-          <article class="slide" data-index="${index}">
-            <div class="slide-media">
-              <img class="slide-img-click" src="${prod.imagen || 'placeholder.jpg'}" alt="${prod.nombre}">
-              <div class="media-overlay">
-                <div class="overlay-title">${prod.nombre}</div>
-                <div class="overlay-actions">
-                  <div class="overlay-price">$${(prod.precio || 0).toLocaleString()}</div>
-                  <button class="overlay-add" data-nombre="${prod.nombre}" data-precio="${prod.precio || 0}">Añadir</button>
-                </div>
-              </div>
-            </div>
-            <div class="slide-content">
-              <h3 class="slide-title">${prod.nombre}</h3>
-              <p class="slide-desc">${prod.descripcion || ''}</p>
-              <div class="slide-actions">
-                <button class="add-btn" data-nombre="${prod.nombre}" data-precio="${prod.precio || 0}">🛒 Añadir al carrito</button>
-                <div class="precio">$${(prod.precio || 0).toLocaleString()}</div>
-              </div>
-            </div>
-          </article>
-        `;
-
-        // Click en imagen -> detalle
-        const img = carouselEl.querySelector('.slide-img-click');
-        if (img) {
-          img.style.cursor = 'pointer';
-          img.addEventListener('click', () => {
-            const targetPage = (prod.categoria && prod.categoria.toLowerCase() === 'decoracion') ? 'decoracion.html'
-                             : (prod.categoria && prod.categoria.toLowerCase() === 'juegos') ? 'juegos.html'
-                             : 'catalogo.html';
-            const url = `${targetPage}?expand=${encodeURIComponent(prod.nombre)}`;
-            window.location.href = url;
-          });
-        }
-
-        if(dotsEl) {
-            const dotButtons = dotsEl.querySelectorAll('button');
-            dotButtons.forEach((b,i)=> b.classList.toggle('active', i===index));
-        }
-      }
-
-      function renderDots() {
-        if(!dotsEl) return;
-        dotsEl.innerHTML = '';
-        slides.forEach((s, i) => {
-          const btn = document.createElement('button');
-          btn.setAttribute('aria-label', 'Ir al producto ' + (i+1));
-          btn.addEventListener('click', () => { goTo(i); });
-          if (i===0) btn.classList.add('active');
-          dotsEl.appendChild(btn);
-        });
-      }
-
-      function goTo(i) {
-        if (i < 0) i = slides.length - 1;
-        if (i >= slides.length) i = 0;
-        current = i;
-        renderSlide(current);
-      }
-
-      function next() { goTo(current + 1); }
-      function prev() { goTo(current - 1); }
-
-      function attachEvents() {
-        if(nextBtn) nextBtn.addEventListener('click', next);
-        if(prevBtn) prevBtn.addEventListener('click', prev);
-
-        window.addEventListener('keydown', (e) => {
-          if (e.key === 'ArrowRight') next();
-          if (e.key === 'ArrowLeft') prev();
-        });
-
-        if(carouselEl) {
-            carouselEl.addEventListener('click', (e) => {
-              const overlayBtn = e.target.closest('.overlay-add');
-              const addBtn = e.target.closest('.add-btn');
-              const btn = overlayBtn || addBtn;
-              
-              if (btn) {
-                const nombre = btn.dataset.nombre;
-                const precio = parseFloat(btn.dataset.precio || 0);
-                
-                // ✅ USAMOS LA FUNCIÓN SEGURA DEL MÓDULO
                 manejarClickAgregarAlCarrito({ nombre, precio });
               }
             });
@@ -665,7 +503,8 @@
       loadSlides();
     })();
   </script>
-  <div id="cookieOverlay" class="cookie-overlay">
+
+<div id="cookieOverlay" class="cookie-overlay">
   <div class="cookie-modal">
     <img src="https://cdn-icons-png.flaticon.com/512/1047/1047711.png" alt="Cookie" class="cookie-img">
     
@@ -683,7 +522,5 @@
 </div>
 
 <script src="cookies.js"></script>
-</body>
-</html>
 </body>
 </html>

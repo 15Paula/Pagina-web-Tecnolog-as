@@ -1,5 +1,3 @@
-/* firebase.js - Lógica de conexión y Funciones de Usuario */
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"; // Nota: Usé una versión estable, la 12.5.0 a veces da problemas con CDN, pero si te funciona la 12 déjala.
 import {
   getAuth,
@@ -69,4 +67,16 @@ export {
   doc,
   setDoc,
   getDoc
+};
+/* --- NUEVA FUNCIÓN: GUARDAR PEDIDO --- */
+export const registrarPedido = async (datosPedido) => {
+  try {
+    // Crea una colección "pedidos" automáticamente si no existe
+    const docRef = await addDoc(collection(db, "pedidos"), datosPedido);
+    console.log("Pedido registrado con ID: ", docRef.id);
+    return docRef.id;
+  } catch (e) {
+    console.error("Error al registrar el pedido: ", e);
+    throw e;
+  }
 };

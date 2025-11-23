@@ -65,8 +65,11 @@ export async function iniciarHeaderConFirebase() {
   });
 
   logoutBtn.addEventListener('click', async () => {
-    await logoutUser();
-    window.location.reload();
+    await logoutUser(); // 1. Cerrar en Firebase
+    
+    localStorage.removeItem('carrito'); // 2. ✅ BORRAR EL CARRITO (Línea nueva)
+    
+    window.location.href = "index.html"; // 3. Redirigir al inicio para limpiar todo
   });
 
   // Si las funciones de inicialización del UI están disponibles en el scope global,
