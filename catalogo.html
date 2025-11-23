@@ -7,45 +7,41 @@
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-<script>
-  window.addEventListener('DOMContentLoaded', () => {
-    document.body.classList.add('loaded');
-  });
-</script>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('loaded');
+    });
+  </script>
 
   <div id="header-container"></div>
-  <!-- ✅ Cargar el header con Firebase -->
+  
   <script type="module">
     import { iniciarHeaderConFirebase } from './header.js';
-
     document.addEventListener('DOMContentLoaded', () => {
       iniciarHeaderConFirebase();
     });
   </script>
+
   <main>
     <h1 class="page-title">Catálogo Completo 🛍️</h1>
     <div id="catalogo-container" class="catalogo-grid"></div>
   </main>
 
   <div id="footer-container"></div>
-  <!-- ✅ Script general -->
-  <script type="module" src="script.js"></script>
-  <!-- ✅ Cargar catálogo -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      cargarProductos(); // Sin categoría => carga todo
-    });
-  </script>
+
   <script type="module" src="script.js"></script>
 
   <script type="module">
     import { cargarProductos } from './script.js';
 
     document.addEventListener('DOMContentLoaded', () => {
-        cargarProductos(); // Llamamos sin filtro para que cargue todo el catálogo
+        // Llamamos a la función importada
+        cargarProductos(); 
     });
   </script>
-</body>
-</html>
+
+  <script src="cookies.js"></script>
+
 </body>
 </html>

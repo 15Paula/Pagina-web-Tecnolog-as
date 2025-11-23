@@ -1,11 +1,13 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+/* firebase.js - Lógica de conexión y Funciones de Usuario */
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"; // Nota: Usé una versión estable, la 12.5.0 a veces da problemas con CDN, pero si te funciona la 12 déjala.
 import {
   getAuth,
   createUserWithEmailAndPassword as firebaseCreateUser,
   signInWithEmailAndPassword as firebaseSignIn,
   onAuthStateChanged as firebaseOnAuthStateChanged,
   signOut
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
 import {
   getFirestore,
@@ -17,20 +19,17 @@ import {
   query,
   where,
   getDocs
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAQWzV5B7x8pChiuSggrLFGj753i0kySCU",
-  authDomain: "login-93039.firebaseapp.com",
-  projectId: "login-93039",
-  storageBucket: "login-93039.appspot.com",
-  messagingSenderId: "428055807133",
-  appId: "1:428055807133:web:22dee2f9c08b15bce80074"
-};
+// 👇 AQUÍ ESTÁ EL CAMBIO: Importamos la config en lugar de escribirla aquí
+import { firebaseConfig } from "./config.js";
 
+// Inicializamos
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+// 👇 DE AQUÍ PARA ABAJO ES TU CÓDIGO ORIGINAL (NO LO BORRES) 👇
 
 export const registerUser = async (email, password, nombre, telefono, direccion) => {
   const userCredential = await firebaseCreateUser(auth, email, password);
@@ -60,6 +59,7 @@ export const logoutUser = () => {
   return signOut(auth);
 };
 
+// Exportamos utilidades de Firestore para usarlas en otros lados
 export {
   collection,
   addDoc,
